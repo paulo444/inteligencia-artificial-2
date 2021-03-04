@@ -46,12 +46,14 @@ namespace Practica_1___IA_2
 			this.label4 = new System.Windows.Forms.Label();
 			this.epochNumber = new System.Windows.Forms.Label();
 			this.dataGrid1 = new System.Windows.Forms.DataGrid();
-			this.button1 = new System.Windows.Forms.Button();
+			this.InitializeValues = new System.Windows.Forms.Button();
 			this.label5 = new System.Windows.Forms.Label();
 			this.label6 = new System.Windows.Forms.Label();
 			this.label7 = new System.Windows.Forms.Label();
+			this.pictureBox1 = new System.Windows.Forms.PictureBox();
 			((System.ComponentModel.ISupportInitialize)(this.graphicImage)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -71,7 +73,6 @@ namespace Practica_1___IA_2
 			this.graphicImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
 			this.graphicImage.TabIndex = 1;
 			this.graphicImage.TabStop = false;
-			this.graphicImage.Click += new System.EventHandler(this.GraphicImageClick);
 			// 
 			// startPerceptron
 			// 
@@ -97,6 +98,7 @@ namespace Practica_1___IA_2
 			this.textBox1.Name = "textBox1";
 			this.textBox1.Size = new System.Drawing.Size(116, 22);
 			this.textBox1.TabIndex = 4;
+			this.textBox1.TextChanged += new System.EventHandler(this.TextBox1TextChanged);
 			// 
 			// textBox2
 			// 
@@ -104,6 +106,7 @@ namespace Practica_1___IA_2
 			this.textBox2.Name = "textBox2";
 			this.textBox2.Size = new System.Drawing.Size(116, 22);
 			this.textBox2.TabIndex = 6;
+			this.textBox2.TextChanged += new System.EventHandler(this.TextBox2TextChanged);
 			// 
 			// label3
 			// 
@@ -139,14 +142,15 @@ namespace Practica_1___IA_2
 			this.dataGrid1.Size = new System.Drawing.Size(253, 183);
 			this.dataGrid1.TabIndex = 9;
 			// 
-			// button1
+			// InitializeValues
 			// 
-			this.button1.Location = new System.Drawing.Point(652, 143);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(75, 23);
-			this.button1.TabIndex = 10;
-			this.button1.Text = "Inicializa";
-			this.button1.UseVisualStyleBackColor = true;
+			this.InitializeValues.Location = new System.Drawing.Point(652, 143);
+			this.InitializeValues.Name = "InitializeValues";
+			this.InitializeValues.Size = new System.Drawing.Size(75, 23);
+			this.InitializeValues.TabIndex = 10;
+			this.InitializeValues.Text = "Inicializa";
+			this.InitializeValues.UseVisualStyleBackColor = true;
+			this.InitializeValues.Click += new System.EventHandler(this.InitializeValuesClick);
 			// 
 			// label5
 			// 
@@ -172,15 +176,26 @@ namespace Practica_1___IA_2
 			this.label7.TabIndex = 13;
 			this.label7.Text = "W2: ";
 			// 
+			// pictureBox1
+			// 
+			this.pictureBox1.Location = new System.Drawing.Point(80, 56);
+			this.pictureBox1.Name = "pictureBox1";
+			this.pictureBox1.Size = new System.Drawing.Size(400, 400);
+			this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+			this.pictureBox1.TabIndex = 14;
+			this.pictureBox1.TabStop = false;
+			this.pictureBox1.Click += new System.EventHandler(this.PictureBox1Click);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(906, 514);
+			this.Controls.Add(this.pictureBox1);
 			this.Controls.Add(this.label7);
 			this.Controls.Add(this.label6);
 			this.Controls.Add(this.label5);
-			this.Controls.Add(this.button1);
+			this.Controls.Add(this.InitializeValues);
 			this.Controls.Add(this.dataGrid1);
 			this.Controls.Add(this.epochNumber);
 			this.Controls.Add(this.label4);
@@ -195,13 +210,15 @@ namespace Practica_1___IA_2
 			this.Text = "Practica 1 - IA 2";
 			((System.ComponentModel.ISupportInitialize)(this.graphicImage)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGrid1)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.PictureBox pictureBox1;
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.Label label5;
-		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Button InitializeValues;
 		private System.Windows.Forms.DataGrid dataGrid1;
 		private System.Windows.Forms.Label epochNumber;
 		private System.Windows.Forms.Label label4;

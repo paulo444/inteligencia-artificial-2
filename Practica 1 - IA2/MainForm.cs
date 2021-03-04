@@ -9,6 +9,8 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 namespace Practica_1___IA_2
@@ -21,18 +23,31 @@ namespace Practica_1___IA_2
 		const int WIDTH = 100;
 		const int HEIGHT = 100;
 		Bitmap bitmap;
-		List<Point> points;
+		Bitmap bitmap2;
+		List<PointValue> points;
+		
+		int W0;
+		int W1;
+		int W2;
+		float eta;
+		int epochs;
 			
 		public MainForm()
 		{
 			InitializeComponent();
 			setGraphic();
+			setDefaultValues();
 			
-			points = new List<Point>();
+			points = new List<PointValue>();
 		}
 		
 		void setGraphic(){
 			bitmap = new Bitmap(WIDTH, HEIGHT);
+			bitmap2 = new Bitmap(WIDTH,HEIGHT);
+			
+			pictureBox1.BackColor = Color.Transparent;
+			pictureBox1.Parent = graphicImage;
+			pictureBox1.Location = new Point(0, 0);
 			
 			for(int i=0; i<HEIGHT; i++)
 			{
@@ -44,6 +59,7 @@ namespace Practica_1___IA_2
 			drawCenterLines();
 			
 			graphicImage.Image = bitmap;
+			pictureBox1.Image = bitmap2;
 		}
 		
 		void drawCenterLines(){
@@ -56,13 +72,10 @@ namespace Practica_1___IA_2
 			}
 		}
 		
-		void GraphicImageClick(object sender, EventArgs e)
+		void PictureBox1Click(object sender, EventArgs e)
 		{
 			MouseEventArgs me = (MouseEventArgs)e;
 			Point coords = me.Location;
-			
-			textBox1.Text = coords.X.ToString();
-			textBox2.Text = coords.Y.ToString();
 			
 			if(me.Button == MouseButtons.Right){
 				drawCircle(coords);
@@ -81,7 +94,7 @@ namespace Practica_1___IA_2
 				this.graphicImage.Refresh();
 			}
 			
-			points.Add(p);
+			addPoint(p,1);
 		}
 		
 		void drawSquare(Point p){
@@ -94,7 +107,7 @@ namespace Practica_1___IA_2
 				this.graphicImage.Refresh();
 			}
 			
-			points.Add(p);
+			addPoint(p,0);
 		}
 		
 		Point realPixels(Point p){
@@ -115,7 +128,85 @@ namespace Practica_1___IA_2
 		    return realPoint;
 		}
 		
+		void addPoint(Point p, int val){
+			p.X = -(WIDTH/2) + p.X;
+			p.Y = HEIGHT/2 - p.Y;
+			
+			PointValue pv = new PointValue(p.X, p.Y, val);
+			points.Add(pv);
+		}
+		
+		void drawLine(){
+			for(int i=0; i<HEIGHT; i++){
+				for(int j=0; j<WIDTH; j++){
+					bitmap2.SetPixel(j,i,Color.Transparent);
+				}
+			}
+			
+			for(int i=0; i<WIDTH; i++){
+				if(W2 == 0){
+					break;
+				}
 				
+				int y = (-W1*i+W0)/W2;
+				
+				if(y < 0 || y >= HEIGHT){
+					
+				}else{
+					bitmap2.SetPixel(i,y,Color.OrangeRed);
+				}
+			}
+			
+			graphicImage.Refresh();
+			pictureBox1.Refresh();
+		}
+		
+		void setRandomValues(){
+			Random random = new Random();
+			
+			W0 = random.Next(-WIDTH,WIDTH);
+			W1 = random.Next(-WIDTH,WIDTH);
+			W2 = random.Next(-WIDTH,WIDTH);
+			
+			label5.Text = "W0: " + W0.ToString();
+			label6.Text = "W1: " + W1.ToString();
+			label7.Text = "W2: " + W2.ToString();
+		}
+		
+		void setDefaultValues(){
+			eta = .4f;
+			epochs = 100;
+			
+			textBox1.Text = eta.ToString();
+			textBox2.Text = epochs.ToString();
+		}
+		
+		void InitializeValuesClick(object sender, EventArgs e)
+		{
+			setRandomValues();
+			drawLine();
+		}
+		
+		void TextBox1TextChanged(object sender, EventArgs e)
+		{
+			int parsedValue;
+			if (!int.TryParse(textBox1.Text, out parsedValue))
+			{
+			    return;
+			}
+			eta = float.Parse(textBox1.Text);
+		}
+		
+		void TextBox2TextChanged(object sender, EventArgs e)
+		{
+			int parsedValue;
+			if (!int.TryParse(textBox2.Text, out parsedValue))
+			{
+			    return;
+			}
+			epochs = int.Parse(textBox2.Text);
+		}
+		
 		void StartPerceptronClick(object sender, EventArgs e)
 		{
 			
