@@ -12,6 +12,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace Practica_1___IA_2
 {
@@ -26,11 +27,13 @@ namespace Practica_1___IA_2
 		Bitmap bitmap2;
 		List<PointValue> points;
 		
-		float W0;
-		float W1;
-		float W2;
-		float eta;
+		float W0 = 0;
+		float W1 = 0;
+		float W2 = 0;
+		float ETA;
 		int epochs;
+		
+		int SLEEP_TIME = 100;
 			
 		public MainForm()
 		{
@@ -166,8 +169,8 @@ namespace Practica_1___IA_2
 			int y2 = 0;
 			
 			if(W2 != 0){
-				y1 = (int)((-W1*x1+W0)/W2);
-				y2 = (int)((-W1*x2+W0)/W2);
+				y1 = (int)(-(W1*x1+W0)/W2);
+				y2 = (int)(-(W1*x2+W0)/W2);
 			}
 			
 			x1 = x1 + WIDTH/20;
@@ -203,9 +206,7 @@ namespace Practica_1___IA_2
 			W1 = (float)GetRandomNumber(-WIDTH/20,WIDTH/20, random);
 			W2 = (float)GetRandomNumber(-WIDTH/20,WIDTH/20, random);
 			
-			label5.Text = "W0: " + W0.ToString();
-			label6.Text = "W1: " + W1.ToString();
-			label7.Text = "W2: " + W2.ToString();
+			setValuesToScreen();
 		}
 		
 		public double GetRandomNumber(int minimum, int maximum, Random rand)
@@ -214,10 +215,10 @@ namespace Practica_1___IA_2
 		}
 		
 		void setDefaultValues(){
-			eta = .4f;
+			ETA = .4f;
 			epochs = 100;
 			
-			textBox1.Text = eta.ToString();
+			textBox1.Text = ETA.ToString();
 			textBox2.Text = epochs.ToString();
 		}
 		
@@ -234,7 +235,7 @@ namespace Practica_1___IA_2
 			{
 			    return;
 			}
-			eta = float.Parse(textBox1.Text);
+			ETA = float.Parse(textBox1.Text);
 		}
 		
 		void TextBox2TextChanged(object sender, EventArgs e)
@@ -249,6 +250,58 @@ namespace Practica_1___IA_2
 		
 		void StartPerceptronClick(object sender, EventArgs e)
 		{
+			int finish = 0;
+			int epoch = 0;
+			float error = 0;
+			
+			while(finish == 0 && epoch < epochs){
+				finish = 1;
+				
+				for(int i=0; i<points.Count; i++){
+					error = points[i].V - Pw(points[i]);
+					
+					if(error != 0){
+						finish = 0;
+						W0 = W0 + ETA * error;
+						W1 = W1 + ETA * error * points[i].X;
+						W2 = W2 + ETA * error * points[i].Y;
+					}
+				}
+				epoch++;
+				drawLine();
+				Thread.Sleep(SLEEP_TIME);
+			}
+			
+			drawLine();
+			setValuesToScreen();
+			setResultsToScreen(epoch);
+		}
+		
+		int Pw(PointValue pv){
+			float sum = 0;
+			
+			sum = (W0) + (W1*pv.X) + (W2*pv.Y);
+			
+			if(sum >= 0){
+				return 1;
+			}else{
+				return 0;
+			}
+		}
+		
+		void setValuesToScreen(){
+			label5.Text = "W0: " + W0.ToString();
+			label6.Text = "W1: " + W1.ToString();
+			label7.Text = "W2: " + W2.ToString();
+		}
+		
+		void setResultsToScreen(int e){
+			if(e >= epochs){
+				epochNumber.Text = "#Epochs: NO";
+			}else{
+				epochNumber.Text = "#Epochs: " + e.ToString();
+			}
+			
 			
 		}
 	}
