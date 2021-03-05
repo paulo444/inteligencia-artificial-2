@@ -25,5 +25,7 @@ namespace Practica_1___IA_2
 			this.Y = y;
 			this.V = v;
 		}
+		
+		public PointValue(){}
 	}
 }

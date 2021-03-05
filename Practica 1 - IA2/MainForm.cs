@@ -34,6 +34,8 @@ namespace Practica_1___IA_2
 		int epochs;
 		
 		int SLEEP_TIME = 100;
+		
+		int mode = 0;
 			
 		public MainForm()
 		{
@@ -80,10 +82,14 @@ namespace Practica_1___IA_2
 			MouseEventArgs me = (MouseEventArgs)e;
 			Point coords = me.Location;
 			
-			if(me.Button == MouseButtons.Right){
-				drawCircle(coords);
+			if(mode == 0){
+				if(me.Button == MouseButtons.Right){
+					drawCircle(coords);
+				}else{
+					drawSquare(coords);
+				}
 			}else{
-				drawSquare(coords);
+				classify(coords);
 			}
 		}
 		
@@ -145,22 +151,6 @@ namespace Practica_1___IA_2
 					bitmap2.SetPixel(j,i,Color.Transparent);
 				}
 			}
-			
-			/*
-			for(int i=0; i<WIDTH; i++){
-				if(W2 == 0){
-					break;
-				}
-				
-				int y = (-W1*i+W0)/W2;
-				
-				if(y < 0 || y >= HEIGHT){
-					
-				}else{
-					bitmap2.SetPixel(i,y,Color.OrangeRed);
-				}
-			}
-			*/
 			
 			int x1 = -WIDTH/20;
 			int x2 = WIDTH/20;
@@ -275,6 +265,7 @@ namespace Practica_1___IA_2
 			drawLine();
 			setValuesToScreen();
 			setResultsToScreen(epoch);
+			mode = 1;
 		}
 		
 		int Pw(PointValue pv){
@@ -301,7 +292,26 @@ namespace Practica_1___IA_2
 			}else{
 				epochNumber.Text = "#Epochs: " + e.ToString();
 			}
+			generateConfusionTable();
+		}
+		
+		void classify(Point p){
+			Point rp = realPixels(p);
 			
+			PointValue pv = new PointValue();
+			
+			pv.X = (float)(-(WIDTH/2) + rp.X)/10;
+			pv.Y = (float)(HEIGHT/2 - rp.Y)/10;
+			pv.V = Pw(pv);
+			
+			if(pv.V == 1){
+				drawCircle(p);
+			}else{
+				drawSquare(p);
+			}
+		}
+		
+		void generateConfusionTable(){
 			
 		}
 	}
