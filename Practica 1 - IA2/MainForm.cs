@@ -26,9 +26,9 @@ namespace Practica_1___IA_2
 		Bitmap bitmap2;
 		List<PointValue> points;
 		
-		int W0;
-		int W1;
-		int W2;
+		float W0;
+		float W1;
+		float W2;
 		float eta;
 		int epochs;
 			
@@ -85,7 +85,7 @@ namespace Practica_1___IA_2
 		}
 		
 		void drawCircle(Point p){
-			const int SIZE = 6;
+			const int SIZE = 3;
 			
 			p = realPixels(p);
 			
@@ -98,7 +98,7 @@ namespace Practica_1___IA_2
 		}
 		
 		void drawSquare(Point p){
-			const int SIZE = 6;
+			const int SIZE = 3;
 			
 			p = realPixels(p);
 			
@@ -132,7 +132,7 @@ namespace Practica_1___IA_2
 			p.X = -(WIDTH/2) + p.X;
 			p.Y = HEIGHT/2 - p.Y;
 			
-			PointValue pv = new PointValue(p.X, p.Y, val);
+			PointValue pv = new PointValue((float)p.X/10, (float)p.Y/10, val);
 			points.Add(pv);
 		}
 		
@@ -143,6 +143,7 @@ namespace Practica_1___IA_2
 				}
 			}
 			
+			/*
 			for(int i=0; i<WIDTH; i++){
 				if(W2 == 0){
 					break;
@@ -156,6 +157,40 @@ namespace Practica_1___IA_2
 					bitmap2.SetPixel(i,y,Color.OrangeRed);
 				}
 			}
+			*/
+			
+			int x1 = -WIDTH/20;
+			int x2 = WIDTH/20;
+			
+			int y1 = 0;
+			int y2 = 0;
+			
+			if(W2 != 0){
+				y1 = (int)((-W1*x1+W0)/W2);
+				y2 = (int)((-W1*x2+W0)/W2);
+			}
+			
+			x1 = x1 + WIDTH/20;
+			
+			if(y1 < 0){
+				y1 = (WIDTH/20) + (y1*-1);
+			}else{
+				y1 = (WIDTH/20) - y1;
+			}
+			
+			if(y2 < 0){
+				y2 = (WIDTH/20) + (y2*-1);
+			}else{
+				y2 = (WIDTH/20) - y2;
+			}
+			
+			using (Graphics gfx = Graphics.FromImage(pictureBox1.Image)){
+				gfx.DrawLine(new Pen(Color.OrangeRed),
+				             (x1*10),
+				             (y1*10),
+				             (x2*20),
+				             (y2*10));
+			}
 			
 			graphicImage.Refresh();
 			pictureBox1.Refresh();
@@ -164,13 +199,18 @@ namespace Practica_1___IA_2
 		void setRandomValues(){
 			Random random = new Random();
 			
-			W0 = random.Next(-WIDTH,WIDTH);
-			W1 = random.Next(-WIDTH,WIDTH);
-			W2 = random.Next(-WIDTH,WIDTH);
+			W0 = (float)GetRandomNumber(-WIDTH/20,WIDTH/20, random);
+			W1 = (float)GetRandomNumber(-WIDTH/20,WIDTH/20, random);
+			W2 = (float)GetRandomNumber(-WIDTH/20,WIDTH/20, random);
 			
 			label5.Text = "W0: " + W0.ToString();
 			label6.Text = "W1: " + W1.ToString();
 			label7.Text = "W2: " + W2.ToString();
+		}
+		
+		public double GetRandomNumber(int minimum, int maximum, Random rand)
+		{
+		    return rand.NextDouble() * (maximum - minimum) + minimum;
 		}
 		
 		void setDefaultValues(){

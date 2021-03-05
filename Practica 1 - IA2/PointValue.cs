@@ -15,11 +15,11 @@ namespace Practica_1___IA_2
 	/// </summary>
 	public class PointValue
 	{
-		public int X;
-		public int Y;
-		public int V;
+		public float X;
+		public float Y;
+		public float V;
 		
-		public PointValue(int x, int y, int v)
+		public PointValue(float x, float y, float v)
 		{
 			this.X = x;
 			this.Y = y;
