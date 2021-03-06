@@ -182,6 +182,8 @@ namespace Practica_1___IA_2
 			// 
 			// dataGridView1
 			// 
+			this.dataGridView1.AllowUserToAddRows = false;
+			this.dataGridView1.AllowUserToDeleteRows = false;
 			this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
 									this.Column2,
@@ -189,6 +191,7 @@ namespace Practica_1___IA_2
 									this.Column1});
 			this.dataGridView1.Location = new System.Drawing.Point(585, 271);
 			this.dataGridView1.Name = "dataGridView1";
+			this.dataGridView1.ReadOnly = true;
 			this.dataGridView1.RowTemplate.Height = 24;
 			this.dataGridView1.Size = new System.Drawing.Size(293, 150);
 			this.dataGridView1.TabIndex = 15;
@@ -197,17 +200,20 @@ namespace Practica_1___IA_2
 			// 
 			this.Column2.HeaderText = "Valor";
 			this.Column2.Name = "Column2";
+			this.Column2.ReadOnly = true;
 			this.Column2.Width = 50;
 			// 
 			// V_Esperado
 			// 
 			this.V_Esperado.HeaderText = "V Esperado";
 			this.V_Esperado.Name = "V_Esperado";
+			this.V_Esperado.ReadOnly = true;
 			// 
 			// Column1
 			// 
 			this.Column1.HeaderText = "F Esperado";
 			this.Column1.Name = "Column1";
+			this.Column1.ReadOnly = true;
 			// 
 			// MainForm
 			// 

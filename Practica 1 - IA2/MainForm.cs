@@ -312,7 +312,28 @@ namespace Practica_1___IA_2
 		}
 		
 		void generateConfusionTable(){
+			int tt = 0, tf = 0, ft = 0, ff = 0;
+			float error;
 			
+			for(int i=0; i<points.Count; i++){
+				error = points[i].V - Pw(points[i]);
+				
+				if(error == 0){
+					if(points[i].V == 0){
+						ff++;
+					}else{
+						tt++;
+					}
+				}else if(error == 1){
+					tf++;
+				}else{
+					ft++;
+				}
+			}
+			
+			dataGridView1.Rows.Clear();
+			dataGridView1.Rows.Add("V",tt.ToString(),ft.ToString());
+			dataGridView1.Rows.Add("F",tf.ToString(),ff.ToString());
 		}
 	}
 }
