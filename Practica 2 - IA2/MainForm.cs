@@ -23,8 +23,14 @@ namespace Practica_1___IA_2
 	{
 		const int WIDTH = 100;
 		const int HEIGHT = 100;
+		
+		int ERRORS_WIDTH = 300;
+		int ERRORS_HEIGHT = 100;
+		
 		Bitmap bitmap;
 		Bitmap bitmap2;
+		Bitmap bitmap3;
+		
 		List<PointValue> points;
 		
 		float W0 = 0;
@@ -47,6 +53,7 @@ namespace Practica_1___IA_2
 			points = new List<PointValue>();
 		}
 		
+		//Graficas principal
 		void setGraphic(){
 			bitmap = new Bitmap(WIDTH, HEIGHT);
 			bitmap2 = new Bitmap(WIDTH,HEIGHT);
@@ -221,10 +228,11 @@ namespace Practica_1___IA_2
 			drawLine();
 		}
 		
+		//Datos de TextBox
 		void TextBox1TextChanged(object sender, EventArgs e)
 		{
-			int parsedValue;
-			if (!int.TryParse(textBox1.Text, out parsedValue))
+			float parsedValue;
+			if (!float.TryParse(textBox1.Text, out parsedValue))
 			{
 			    return;
 			}
@@ -241,46 +249,75 @@ namespace Practica_1___IA_2
 			epochs = int.Parse(textBox2.Text);
 		}
 		
-		void StartPerceptronClick(object sender, EventArgs e)
+		void TextBox3TextChanged(object sender, EventArgs e)
 		{
-			int finish = 0;
+			float parsedValue;
+			if (!float.TryParse(textBox3.Text, out parsedValue))
+			{
+			    return;
+			}
+			EXPECTED_ERROR = float.Parse(textBox3.Text);
+		}
+		
+		//Adaline
+		void StartAdalineClick(object sender, EventArgs e)
+		{
 			int epoch = 0;
 			float error = 0;
+			float acumulateError = 1;
 			
-			while(finish == 0 && epoch < epochs){
-				finish = 1;
+			createErrorGraphic();
+			
+			while(acumulateError > EXPECTED_ERROR && epoch < epochs){
+				acumulateError = 0;
 				
 				for(int i=0; i<points.Count; i++){
-					error = points[i].V - Pw(points[i]);
+					error = points[i].V - Fw(points[i]);
+					acumulateError += (error*error)/2;
 					
-					if(error != 0){
-						finish = 0;
-						W0 = W0 + ETA * error;
-						W1 = W1 + ETA * error * points[i].X;
-						W2 = W2 + ETA * error * points[i].Y;
-					}
+					W0 = W0 + ETA * error * FwSingle(W0) * (1 - FwSingle(W0));
+					W1 = W1 + ETA * error * FwSingle(W1) * (1 - FwSingle(W1)) * points[i].X;
+					W2 = W2 + ETA * error * FwSingle(W2) * (1 - FwSingle(W2)) * points[i].Y;
 				}
+				
 				epoch++;
+				
 				drawLine();
+				drawCuadraticError(epoch*2, (int)(acumulateError*ERRORS_HEIGHT));
+				
 				Thread.Sleep(SLEEP_TIME);
 			}
 			
 			drawLine();
 			setValuesToScreen();
 			setResultsToScreen(epoch);
+			drawErrorNumbers();
+			fullEvaluation();
 			mode = 1;
 		}
 		
-		int Pw(PointValue pv){
+		float Fw(PointValue pv){
 			float sum = 0;
 			
 			sum = (W0) + (W1*pv.X) + (W2*pv.Y);
+			sum = (float)(1 / (1 + Math.Exp(-sum)));
 			
-			if(sum >= 0){
-				return 1;
-			}else{
-				return 0;
+			return sum;
+		}
+		
+		float FwSingle(float w){
+			float sum = 0;
+			
+			sum = (float)(1 / (1 + Math.Exp(-sum)));
+			
+			return sum;
+		}
+		
+		float abs(float pv){
+			if(pv < 0){
+				return pv * -1;
 			}
+			return pv * -1;
 		}
 		
 		void setValuesToScreen(){
@@ -305,9 +342,9 @@ namespace Practica_1___IA_2
 			
 			pv.X = (float)(-(WIDTH/2) + rp.X)/10;
 			pv.Y = (float)(HEIGHT/2 - rp.Y)/10;
-			pv.V = Pw(pv);
+			pv.V = Fw(pv);
 			
-			if(pv.V == 1){
+			if(pv.V > 0.5){
 				drawCircle(p);
 			}else{
 				drawSquare(p);
@@ -319,24 +356,105 @@ namespace Practica_1___IA_2
 			float error;
 			
 			for(int i=0; i<points.Count; i++){
-				error = points[i].V - Pw(points[i]);
+				error = points[i].V - Fw(points[i]);
 				
-				if(error == 0){
-					if(points[i].V == 0){
-						ff++;
-					}else{
-						tt++;
-					}
-				}else if(error == 1){
+				if(error > .5){
 					tf++;
-				}else{
+				}else if(error < -.5){
 					ft++;
+				}else if(error < .5 && error > 0){
+					tt++;
+				}else{
+					ff++;
 				}
 			}
 			
 			dataGridView1.Rows.Clear();
 			dataGridView1.Rows.Add("V",tt.ToString(),ft.ToString());
 			dataGridView1.Rows.Add("F",tf.ToString(),ff.ToString());
+		}
+		
+		//Error cuadratico
+		void createErrorGraphic(){
+			ERRORS_WIDTH = epochs * 2;
+			ERRORS_HEIGHT = ERRORS_WIDTH/3;
+			
+			bitmap3 = new Bitmap(ERRORS_WIDTH,ERRORS_HEIGHT);
+			
+			for(int i=0; i<ERRORS_HEIGHT; i++){
+				for(int j=0; j<ERRORS_WIDTH; j++){
+					bitmap3.SetPixel(j,i, Color.White);
+				}
+			}
+			
+			pictureBox2.Image = bitmap3;
+			
+			drawErrorNumbers();
+		}
+		
+		void drawErrorNumbers(){
+			int fontSize = (int)(ERRORS_WIDTH*.03);
+			int moveString = fontSize*2;
+			
+			if(epochs < 30){
+				return;
+			}
+			
+			using (Graphics gfx = Graphics.FromImage(pictureBox2.Image)){
+				gfx.DrawString("1", new Font("Arial",fontSize), new SolidBrush(Color.Black),0,0);
+				gfx.DrawString("0", new Font("Arial",fontSize), new SolidBrush(Color.Black),0,ERRORS_HEIGHT-moveString);
+				
+				gfx.DrawString(epochs.ToString(), new Font("Arial",fontSize), new SolidBrush(Color.Black),ERRORS_WIDTH-moveString,ERRORS_HEIGHT-moveString);
+			}
+			
+			pictureBox2.Refresh();
+		}
+		
+		void drawCuadraticError(int x, int y){
+			if(x >= ERRORS_WIDTH){
+				return;
+			}
+			
+			if(y >= ERRORS_HEIGHT){
+				y = ERRORS_HEIGHT-1;
+			}
+			
+			for(int i=ERRORS_HEIGHT-1; i>ERRORS_HEIGHT-y; i--){
+				bitmap3.SetPixel(x, i, Color.Silver);
+			}
+			
+			pictureBox2.Refresh();
+		}
+		
+		void fullEvaluation(){
+			for(int i=0; i<HEIGHT; i++){
+				for(int j=0; j<WIDTH; j++){
+					bitmap2.SetPixel(j,i,Color.Transparent);
+				}
+			}
+			
+			for(int i=0; i<HEIGHT; i++){
+				for(int j=0; j<WIDTH; j++){
+					if(bitmap.GetPixel(j,i).R == 255 && bitmap.GetPixel(j,i).G == 255 && bitmap.GetPixel(j,i).B == 255){
+						Point rp = new Point(j,i);
+			
+						PointValue pv = new PointValue();
+						
+						pv.X = (float)(-(WIDTH/2) + rp.X)/10;
+						pv.Y = (float)(HEIGHT/2 - rp.Y)/10;
+						pv.V = Fw(pv);
+						
+						if(pv.V >= .5){
+							bitmap.SetPixel(j,i, Color.PaleVioletRed);
+						}else{
+							bitmap.SetPixel(j,i, Color.BlueViolet);
+						}
+					}
+				}
+			}
+			
+			graphicImage.Refresh();
+			pictureBox2.Refresh();
 		}
 	}
 }

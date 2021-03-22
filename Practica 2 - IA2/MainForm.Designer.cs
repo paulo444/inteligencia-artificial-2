@@ -38,7 +38,7 @@ namespace Practica_1___IA_2
 		{
 			this.label1 = new System.Windows.Forms.Label();
 			this.graphicImage = new System.Windows.Forms.PictureBox();
-			this.startPerceptron = new System.Windows.Forms.Button();
+			this.startAdaline = new System.Windows.Forms.Button();
 			this.label2 = new System.Windows.Forms.Label();
 			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.textBox2 = new System.Windows.Forms.TextBox();
@@ -82,15 +82,15 @@ namespace Practica_1___IA_2
 			this.graphicImage.TabIndex = 1;
 			this.graphicImage.TabStop = false;
 			// 
-			// startPerceptron
+			// startAdaline
 			// 
-			this.startPerceptron.Location = new System.Drawing.Point(218, 462);
-			this.startPerceptron.Name = "startPerceptron";
-			this.startPerceptron.Size = new System.Drawing.Size(98, 23);
-			this.startPerceptron.TabIndex = 2;
-			this.startPerceptron.Text = "Adaline";
-			this.startPerceptron.UseVisualStyleBackColor = true;
-			this.startPerceptron.Click += new System.EventHandler(this.StartPerceptronClick);
+			this.startAdaline.Location = new System.Drawing.Point(218, 462);
+			this.startAdaline.Name = "startAdaline";
+			this.startAdaline.Size = new System.Drawing.Size(98, 23);
+			this.startAdaline.TabIndex = 2;
+			this.startAdaline.Text = "Adaline";
+			this.startAdaline.UseVisualStyleBackColor = true;
+			this.startAdaline.Click += new System.EventHandler(this.StartAdalineClick);
 			// 
 			// label2
 			// 
@@ -226,6 +226,7 @@ namespace Practica_1___IA_2
 			this.textBox3.Name = "textBox3";
 			this.textBox3.Size = new System.Drawing.Size(116, 22);
 			this.textBox3.TabIndex = 17;
+			this.textBox3.TextChanged += new System.EventHandler(this.TextBox3TextChanged);
 			// 
 			// label8
 			// 
@@ -238,7 +239,7 @@ namespace Practica_1___IA_2
 			// label9
 			// 
 			this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label9.Location = new System.Drawing.Point(627, 433);
+			this.label9.Location = new System.Drawing.Point(616, 433);
 			this.label9.Name = "label9";
 			this.label9.Size = new System.Drawing.Size(181, 23);
 			this.label9.TabIndex = 18;
@@ -274,7 +275,7 @@ namespace Practica_1___IA_2
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.textBox1);
 			this.Controls.Add(this.label2);
-			this.Controls.Add(this.startPerceptron);
+			this.Controls.Add(this.startAdaline);
 			this.Controls.Add(this.graphicImage);
 			this.Controls.Add(this.label1);
 			this.Name = "MainForm";
@@ -305,7 +306,7 @@ namespace Practica_1___IA_2
 		private System.Windows.Forms.TextBox textBox2;
 		private System.Windows.Forms.TextBox textBox1;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Button startPerceptron;
+		private System.Windows.Forms.Button startAdaline;
 		private System.Windows.Forms.PictureBox graphicImage;
 		private System.Windows.Forms.Label label1;
 	}
