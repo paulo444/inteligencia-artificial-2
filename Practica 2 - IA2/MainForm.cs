@@ -445,9 +445,9 @@ namespace Practica_1___IA_2
 						pv.V = Fw(pv);
 						
 						if(pv.V >= .5){
-							bitmap.SetPixel(j,i, Color.PaleVioletRed);
+							bitmap.SetPixel(j,i, Color.FromArgb(getColor(pv.V),0,0));
 						}else{
-							bitmap.SetPixel(j,i, Color.BlueViolet);
+							bitmap.SetPixel(j,i, Color.FromArgb(0,0,getColor(pv.V)));
 						}
 					}
 				}
@@ -455,6 +455,18 @@ namespace Practica_1___IA_2
 			
 			graphicImage.Refresh();
 			pictureBox2.Refresh();
+		}
+		
+		int getColor(float c){
+			int color;
+			
+			if(c >= .5){
+				color = (int)(50 + (150 * (c-.5)) / .5);
+			}else{
+				color = (int)(50 + (150 * (.5-c)) / .5);
+			}
+			
+			return color;
 		}
 	}
 }
