@@ -36,6 +36,9 @@ namespace Practica_1___IA_2
 		float W0 = 0;
 		float W1 = 0;
 		float W2 = 0;
+		float W0_p = 0;
+		float W1_p = 0;
+		float W2_p = 0;
 		float ETA;
 		int epochs;
 		float EXPECTED_ERROR;
@@ -204,6 +207,10 @@ namespace Practica_1___IA_2
 			W1 = (float)GetRandomNumber(-WIDTH/20,WIDTH/20, random);
 			W2 = (float)GetRandomNumber(-WIDTH/20,WIDTH/20, random);
 			
+			W0_p = W0;
+			W1_p = W1;
+			W2_p = W2;
+			
 			setValuesToScreen();
 		}
 		
@@ -293,6 +300,11 @@ namespace Practica_1___IA_2
 			setResultsToScreen(epoch);
 			drawErrorNumbers();
 			fullEvaluation();
+			
+			if(checkBox1.Checked){
+				Perceptron();
+			}
+			
 			mode = 1;
 		}
 		
@@ -467,6 +479,90 @@ namespace Practica_1___IA_2
 			}
 			
 			return color;
+		}
+		
+		void Perceptron()
+		{
+			int finish = 0;
+			int epoch = 0;
+			float error = 0;
+			
+			while(finish == 0 && epoch < epochs){
+				finish = 1;
+				
+				for(int i=0; i<points.Count; i++){
+					error = points[i].V - Pw(points[i]);
+					
+					if(error != 0){
+						finish = 0;
+						W0_p = W0_p + ETA * error;
+						W1_p = W1_p + ETA * error * points[i].X;
+						W2_p = W2_p + ETA * error * points[i].Y;
+					}
+				}
+				epoch++;
+				drawLinePerceptron();
+				Thread.Sleep(100);
+			}
+			
+			label11.Text = "#Epochs: " + epoch.ToString();
+			drawLinePerceptron();
+		}
+		
+		int Pw(PointValue pv){
+			float sum = 0;
+			
+			sum = (W0_p) + (W1_p*pv.X) + (W2_p*pv.Y);
+			
+			if(sum >= 0){
+				return 1;
+			}else{
+				return 0;
+			}
+		}
+		
+		void drawLinePerceptron(){
+			for(int i=0; i<HEIGHT; i++){
+				for(int j=0; j<WIDTH; j++){
+					bitmap2.SetPixel(j,i,Color.Transparent);
+				}
+			}
+			
+			int x1 = -WIDTH/20;
+			int x2 = WIDTH/20;
+			
+			int y1 = 0;
+			int y2 = 0;
+			
+			if(W2_p != 0){
+				y1 = (int)(-(W1_p*x1+W0_p)/W2_p);
+				y2 = (int)(-(W1_p*x2+W0_p)/W2_p);
+			}
+			
+			x1 = x1 + WIDTH/20;
+			
+			if(y1 < 0){
+				y1 = (WIDTH/20) + (y1*-1);
+			}else{
+				y1 = (WIDTH/20) - y1;
+			}
+			
+			if(y2 < 0){
+				y2 = (WIDTH/20) + (y2*-1);
+			}else{
+				y2 = (WIDTH/20) - y2;
+			}
+			
+			using (Graphics gfx = Graphics.FromImage(pictureBox1.Image)){
+				gfx.DrawLine(new Pen(Color.OrangeRed),
+				             (x1*10),
+				             (y1*10),
+				             (x2*20),
+				             (y2*10));
+			}
+			
+			graphicImage.Refresh();
+			pictureBox1.Refresh();
 		}
 	}
 }

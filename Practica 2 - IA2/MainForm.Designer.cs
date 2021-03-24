@@ -58,6 +58,9 @@ namespace Practica_1___IA_2
 			this.label8 = new System.Windows.Forms.Label();
 			this.label9 = new System.Windows.Forms.Label();
 			this.pictureBox2 = new System.Windows.Forms.PictureBox();
+			this.checkBox1 = new System.Windows.Forms.CheckBox();
+			this.label10 = new System.Windows.Forms.Label();
+			this.label11 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.graphicImage)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -254,11 +257,40 @@ namespace Practica_1___IA_2
 			this.pictureBox2.TabIndex = 19;
 			this.pictureBox2.TabStop = false;
 			// 
+			// checkBox1
+			// 
+			this.checkBox1.Location = new System.Drawing.Point(100, 533);
+			this.checkBox1.Name = "checkBox1";
+			this.checkBox1.Size = new System.Drawing.Size(158, 29);
+			this.checkBox1.TabIndex = 20;
+			this.checkBox1.Text = "Mostrar Perceptrón";
+			this.checkBox1.UseVisualStyleBackColor = true;
+			// 
+			// label10
+			// 
+			this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label10.Location = new System.Drawing.Point(109, 507);
+			this.label10.Name = "label10";
+			this.label10.Size = new System.Drawing.Size(100, 23);
+			this.label10.TabIndex = 21;
+			this.label10.Text = "Perceptrón";
+			// 
+			// label11
+			// 
+			this.label11.Location = new System.Drawing.Point(109, 565);
+			this.label11.Name = "label11";
+			this.label11.Size = new System.Drawing.Size(143, 23);
+			this.label11.TabIndex = 22;
+			this.label11.Text = "#Epochs: ";
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(906, 612);
+			this.Controls.Add(this.label11);
+			this.Controls.Add(this.label10);
+			this.Controls.Add(this.checkBox1);
 			this.Controls.Add(this.pictureBox2);
 			this.Controls.Add(this.label9);
 			this.Controls.Add(this.textBox3);
@@ -287,6 +319,9 @@ namespace Practica_1___IA_2
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.Label label11;
+		private System.Windows.Forms.Label label10;
+		private System.Windows.Forms.CheckBox checkBox1;
 		private System.Windows.Forms.PictureBox pictureBox2;
 		private System.Windows.Forms.Label label9;
 		private System.Windows.Forms.Label label8;
