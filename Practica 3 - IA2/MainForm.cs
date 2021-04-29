@@ -51,7 +51,7 @@ namespace Practica_1___IA_2
 		
 		int classNumber;
 		int hiddenLayers;
-			
+		
 		public MainForm()
 		{
 			InitializeComponent();
@@ -124,20 +124,20 @@ namespace Practica_1___IA_2
 		
 		Point realPixels(Point p){
 			Int32 realW = graphicImage.Image.Width;
-		    Int32 realH = graphicImage.Image.Height;
-		    Int32 currentW = graphicImage.ClientRectangle.Width;
-		    Int32 currentH = graphicImage.ClientRectangle.Height;
-		    Double zoomW = (currentW / (Double)realW);
-		    Double zoomH = (currentH / (Double)realH);
-		    Double zoomActual = Math.Min(zoomW, zoomH);
-		    Double padX = zoomActual == zoomW ? 0 : (currentW - (zoomActual * realW)) / 2;
-		    Double padY = zoomActual == zoomH ? 0 : (currentH - (zoomActual * realH)) / 2;
-		
-		    Int32 realX = (Int32)((p.X - padX) / zoomActual);
-		    Int32 realY = (Int32)((p.Y - padY) / zoomActual);
-		    
-		    Point realPoint = new Point(realX,realY);
-		    return realPoint;
+			Int32 realH = graphicImage.Image.Height;
+			Int32 currentW = graphicImage.ClientRectangle.Width;
+			Int32 currentH = graphicImage.ClientRectangle.Height;
+			Double zoomW = (currentW / (Double)realW);
+			Double zoomH = (currentH / (Double)realH);
+			Double zoomActual = Math.Min(zoomW, zoomH);
+			Double padX = zoomActual == zoomW ? 0 : (currentW - (zoomActual * realW)) / 2;
+			Double padY = zoomActual == zoomH ? 0 : (currentH - (zoomActual * realH)) / 2;
+			
+			Int32 realX = (Int32)((p.X - padX) / zoomActual);
+			Int32 realY = (Int32)((p.Y - padY) / zoomActual);
+			
+			Point realPoint = new Point(realX,realY);
+			return realPoint;
 		}
 		
 		void addPoint(Point p, int val){
@@ -148,44 +148,47 @@ namespace Practica_1___IA_2
 			points.Add(pv);
 		}
 		
-		void drawLine(){
+		void drawLines(float[,] ws){
 			for(int i=0; i<HEIGHT; i++){
 				for(int j=0; j<WIDTH; j++){
 					bitmap2.SetPixel(j,i,Color.Transparent);
 				}
 			}
 			
-			int x1 = -WIDTH/20;
-			int x2 = WIDTH/20;
-			
-			int y1 = 0;
-			int y2 = 0;
-			
-			if(W2 != 0){
-				y1 = (int)(-(W1*x1+W0)/W2);
-				y2 = (int)(-(W1*x2+W0)/W2);
-			}
-			
-			x1 = x1 + WIDTH/20;
-			
-			if(y1 < 0){
-				y1 = (WIDTH/20) + (y1*-1);
-			}else{
-				y1 = (WIDTH/20) - y1;
-			}
-			
-			if(y2 < 0){
-				y2 = (WIDTH/20) + (y2*-1);
-			}else{
-				y2 = (WIDTH/20) - y2;
-			}
-			
-			using (Graphics gfx = Graphics.FromImage(pictureBox1.Image)){
-				gfx.DrawLine(new Pen(Color.OrangeRed),
-				             (x1*10),
-				             (y1*10),
-				             (x2*20),
-				             (y2*10));
+			for(int i=0; i<ws.GetUpperBound(0)+1; i++){
+				int x1 = -WIDTH/20;
+				int x2 = WIDTH/20;
+				
+				int y1 = 0;
+				int y2 = 0;
+				
+				if(ws[i,2] != 0){
+					y1 = (int)(-(ws[i,1]*x1+ws[i,0])/ws[i,2]);
+					y2 = (int)(-(ws[i,1]*x2+ws[i,0])/ws[i,2]);
+				}
+				
+				x1 = x1 + WIDTH/20;
+				
+				if(y1 < 0){
+					y1 = (WIDTH/20) + (y1*-1);
+				}else{
+					y1 = (WIDTH/20) - y1;
+				}
+				
+				if(y2 < 0){
+					y2 = (WIDTH/20) + (y2*-1);
+				}else{
+					y2 = (WIDTH/20) - y2;
+				}
+				
+				using (Graphics gfx = Graphics.FromImage(pictureBox1.Image)){
+					gfx.DrawLine(new Pen(Color.OrangeRed),
+					             (x1*10),
+					             (y1*10),
+					             (x2*20),
+					             (y2*10));
+				}
+				
 			}
 			
 			graphicImage.Refresh();
@@ -214,7 +217,7 @@ namespace Practica_1___IA_2
 			float parsedValue;
 			if (!float.TryParse(textBox1.Text, out parsedValue))
 			{
-			    return;
+				return;
 			}
 			ETA = float.Parse(textBox1.Text);
 		}
@@ -224,7 +227,7 @@ namespace Practica_1___IA_2
 			int parsedValue;
 			if (!int.TryParse(textBox2.Text, out parsedValue))
 			{
-			    return;
+				return;
 			}
 			epochs = int.Parse(textBox2.Text);
 		}
@@ -234,7 +237,7 @@ namespace Practica_1___IA_2
 			float parsedValue;
 			if (!float.TryParse(textBox3.Text, out parsedValue))
 			{
-			    return;
+				return;
 			}
 			EXPECTED_ERROR = float.Parse(textBox3.Text);
 		}
@@ -262,13 +265,11 @@ namespace Practica_1___IA_2
 				
 				epoch++;
 				
-				drawLine();
 				drawCuadraticError(epoch*2, (int)(acumulateError*ERRORS_HEIGHT));
 				
 				Thread.Sleep(SLEEP_TIME);
 			}
 			
-			drawLine();
 			drawErrorNumbers();
 			fullEvaluation();
 			
@@ -378,7 +379,7 @@ namespace Practica_1___IA_2
 				for(int j=0; j<WIDTH; j++){
 					if(bitmap.GetPixel(j,i).R == 255 && bitmap.GetPixel(j,i).G == 255 && bitmap.GetPixel(j,i).B == 255){
 						Point rp = new Point(j,i);
-			
+						
 						PointValue pv = new PointValue();
 						
 						pv.X = (float)(-(WIDTH/2) + rp.X)/10;
@@ -416,7 +417,7 @@ namespace Practica_1___IA_2
 			int parsedValue;
 			if (!int.TryParse(textBoxClasses.Text, out parsedValue))
 			{
-			    return;
+				return;
 			}
 			classNumber = int.Parse(textBoxClasses.Text);
 			setClasses();
@@ -435,7 +436,7 @@ namespace Practica_1___IA_2
 			int parsedValue;
 			if (!int.TryParse(textBoxArquitecture.Text, out parsedValue))
 			{
-			    return;
+				return;
 			}
 			hiddenLayers = int.Parse(textBoxArquitecture.Text);
 			setArquitecture();
@@ -464,6 +465,9 @@ namespace Practica_1___IA_2
 			layers.Add(classNumber);
 			
 			mlp.createMLP(layers);
+			drawLines(mlp.getFirstLayer());
+			
+			mlp.trainMLP(points, epochs, ETA);
 		}
 	}
 }
