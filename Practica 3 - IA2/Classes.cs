@@ -27,7 +27,7 @@ namespace Practica_1___IA_2
 		public Color getColorClass(int i){
 			switch(i){
 				case 0:
-					return Color.AliceBlue;
+					return Color.BlueViolet;
 					
 				case 1:
 					return Color.OrangeRed;
@@ -36,7 +36,7 @@ namespace Practica_1___IA_2
 					return Color.Brown;
 					
 				case 3:
-					return Color.Coral;
+					return Color.Gold;
 					
 				case 4:
 					return Color.DimGray;
@@ -45,7 +45,7 @@ namespace Practica_1___IA_2
 					return Color.ForestGreen;
 					
 				case 6:
-					return Color.Gold;
+					return Color.Coral;
 					
 				case 7:
 					return Color.HotPink;
@@ -57,7 +57,7 @@ namespace Practica_1___IA_2
 					return Color.Khaki;
 					
 				default:
-					return Color.Azure;
+					return Color.YellowGreen;
 			}
 		}
 	}

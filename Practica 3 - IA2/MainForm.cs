@@ -36,9 +36,7 @@ namespace Practica_1___IA_2
 		float W0 = 0;
 		float W1 = 0;
 		float W2 = 0;
-		float W0_p = 0;
-		float W1_p = 0;
-		float W2_p = 0;
+		
 		float ETA;
 		int epochs;
 		float EXPECTED_ERROR;
@@ -50,6 +48,9 @@ namespace Practica_1___IA_2
 		//MLP
 		Classes classes;
 		MLP mlp;
+		
+		int classNumber;
+		int hiddenLayers;
 			
 		public MainForm()
 		{
@@ -100,10 +101,8 @@ namespace Practica_1___IA_2
 			Point coords = me.Location;
 			
 			if(mode == 0){
-				if(me.Button == MouseButtons.Right){
+				if(me.Button == MouseButtons.Left){
 					drawCircle(coords);
-				}else{
-					drawSquare(coords);
 				}
 			}else{
 				classify(coords);
@@ -116,24 +115,11 @@ namespace Practica_1___IA_2
 			p = realPixels(p);
 			
 			using (Graphics gfx = Graphics.FromImage(graphicImage.Image)){
-				gfx.DrawEllipse(new Pen(Color.Red),p.X-SIZE/2,p.Y-SIZE/2,SIZE,SIZE);
+				gfx.DrawEllipse(new Pen(classes.getColorClass(int.Parse(comboBoxClasses.Text))),p.X-SIZE/2,p.Y-SIZE/2,SIZE,SIZE);
 				this.graphicImage.Refresh();
 			}
 			
-			addPoint(p,1);
-		}
-		
-		void drawSquare(Point p){
-			const int SIZE = 3;
-			
-			p = realPixels(p);
-			
-			using (Graphics gfx = Graphics.FromImage(graphicImage.Image)){
-				gfx.DrawRectangle(new Pen(Color.Blue),p.X-SIZE/2,p.Y-SIZE/2,SIZE,SIZE);
-				this.graphicImage.Refresh();
-			}
-			
-			addPoint(p,0);
+			addPoint(p, int.Parse(comboBoxClasses.Text));
 		}
 		
 		Point realPixels(Point p){
@@ -206,39 +192,20 @@ namespace Practica_1___IA_2
 			pictureBox1.Refresh();
 		}
 		
-		void setRandomValues(){
-			Random random = new Random();
-			
-			W0 = (float)GetRandomNumber(-WIDTH/20,WIDTH/20, random);
-			W1 = (float)GetRandomNumber(-WIDTH/20,WIDTH/20, random);
-			W2 = (float)GetRandomNumber(-WIDTH/20,WIDTH/20, random);
-			
-			W0_p = W0;
-			W1_p = W1;
-			W2_p = W2;
-			
-			setValuesToScreen();
-		}
-		
-		public double GetRandomNumber(int minimum, int maximum, Random rand)
-		{
-		    return rand.NextDouble() * (maximum - minimum) + minimum;
-		}
-		
 		void setDefaultValues(){
 			ETA = .4f;
 			epochs = 100;
 			EXPECTED_ERROR = .1f;
+			classNumber = 3;
+			hiddenLayers = 3;
 			
 			textBox1.Text = ETA.ToString();
 			textBox2.Text = epochs.ToString();
 			textBox3.Text = EXPECTED_ERROR.ToString();
-		}
-		
-		void InitializeValuesClick(object sender, EventArgs e)
-		{
-			setRandomValues();
-			drawLine();
+			textBoxClasses.Text = classNumber.ToString();
+			textBoxArquitecture.Text = hiddenLayers.ToString();
+			comboBoxClasses.Text = "0";
+			setClasses();
 		}
 		
 		//Datos de TextBox
@@ -273,7 +240,7 @@ namespace Practica_1___IA_2
 		}
 		
 		//Adaline
-		void StartAdalineClick(object sender, EventArgs e)
+		void StartMLPClick(object sender, EventArgs e)
 		{
 			int epoch = 0;
 			float error = 0;
@@ -302,14 +269,8 @@ namespace Practica_1___IA_2
 			}
 			
 			drawLine();
-			setValuesToScreen();
-			setResultsToScreen(epoch);
 			drawErrorNumbers();
 			fullEvaluation();
-			
-			if(checkBox1.Checked){
-				Perceptron();
-			}
 			
 			mode = 1;
 		}
@@ -338,21 +299,6 @@ namespace Practica_1___IA_2
 			return pv * -1;
 		}
 		
-		void setValuesToScreen(){
-			label5.Text = "W0: " + W0.ToString();
-			label6.Text = "W1: " + W1.ToString();
-			label7.Text = "W2: " + W2.ToString();
-		}
-		
-		void setResultsToScreen(int e){
-			if(e >= epochs){
-				epochNumber.Text = "#Epochs: NO";
-			}else{
-				epochNumber.Text = "#Epochs: " + e.ToString();
-			}
-			generateConfusionTable();
-		}
-		
 		void classify(Point p){
 			Point rp = realPixels(p);
 			
@@ -365,31 +311,8 @@ namespace Practica_1___IA_2
 			if(pv.V > 0.5){
 				drawCircle(p);
 			}else{
-				drawSquare(p);
+				//drawSquare(p);
 			}
-		}
-		
-		void generateConfusionTable(){
-			int tt = 0, tf = 0, ft = 0, ff = 0;
-			float error;
-			
-			for(int i=0; i<points.Count; i++){
-				error = points[i].V - Fw(points[i]);
-				
-				if(error > .5){
-					tf++;
-				}else if(error < -.5){
-					ft++;
-				}else if(error < .5 && error > 0){
-					tt++;
-				}else{
-					ff++;
-				}
-			}
-			
-			dataGridView1.Rows.Clear();
-			dataGridView1.Rows.Add("V",tt.ToString(),ft.ToString());
-			dataGridView1.Rows.Add("F",tf.ToString(),ff.ToString());
 		}
 		
 		//Error cuadratico
@@ -487,88 +410,60 @@ namespace Practica_1___IA_2
 			return color;
 		}
 		
-		void Perceptron()
+		//MLP
+		void ButtonClassesClick(object sender, EventArgs e)
 		{
-			int finish = 0;
-			int epoch = 0;
-			float error = 0;
-			
-			while(finish == 0 && epoch < epochs){
-				finish = 1;
-				
-				for(int i=0; i<points.Count; i++){
-					error = points[i].V - Pw(points[i]);
-					
-					if(error != 0){
-						finish = 0;
-						W0_p = W0_p + ETA * error;
-						W1_p = W1_p + ETA * error * points[i].X;
-						W2_p = W2_p + ETA * error * points[i].Y;
-					}
-				}
-				epoch++;
-				drawLinePerceptron();
-				Thread.Sleep(100);
+			int parsedValue;
+			if (!int.TryParse(textBoxClasses.Text, out parsedValue))
+			{
+			    return;
 			}
-			
-			label11.Text = "#Epochs: " + epoch.ToString();
-			drawLinePerceptron();
+			classNumber = int.Parse(textBoxClasses.Text);
+			setClasses();
 		}
 		
-		int Pw(PointValue pv){
-			float sum = 0;
+		void setClasses(){
+			comboBoxClasses.Items.Clear();
 			
-			sum = (W0_p) + (W1_p*pv.X) + (W2_p*pv.Y);
-			
-			if(sum >= 0){
-				return 1;
-			}else{
-				return 0;
+			for(int i=0; i<classNumber; i++){
+				comboBoxClasses.Items.Add(i.ToString());
 			}
 		}
 		
-		void drawLinePerceptron(){
-			for(int i=0; i<HEIGHT; i++){
-				for(int j=0; j<WIDTH; j++){
-					bitmap2.SetPixel(j,i,Color.Transparent);
-				}
+		void ButtonArquitectureClick(object sender, EventArgs e)
+		{
+			int parsedValue;
+			if (!int.TryParse(textBoxArquitecture.Text, out parsedValue))
+			{
+			    return;
+			}
+			hiddenLayers = int.Parse(textBoxArquitecture.Text);
+			setArquitecture();
+		}
+		
+		void setArquitecture(){
+			dataGridView2.Rows.Clear();
+			
+			for(int i=0; i<hiddenLayers; i++){
+				dataGridView2.Rows.Add(i.ToString());
+			}
+		}
+		
+		void ButtonCreateArquitectureClick(object sender, EventArgs e)
+		{
+			//setRandomValues();
+			//drawLine();
+			
+			List<int> layers = new List<int>();
+			
+			layers.Add(2);
+			for(int i=0; i<hiddenLayers; i++){
+				layers.Add(int.Parse(dataGridView2.Rows[i].Cells[1].Value.ToString()));
 			}
 			
-			int x1 = -WIDTH/20;
-			int x2 = WIDTH/20;
+			layers.Add(classNumber);
 			
-			int y1 = 0;
-			int y2 = 0;
-			
-			if(W2_p != 0){
-				y1 = (int)(-(W1_p*x1+W0_p)/W2_p);
-				y2 = (int)(-(W1_p*x2+W0_p)/W2_p);
-			}
-			
-			x1 = x1 + WIDTH/20;
-			
-			if(y1 < 0){
-				y1 = (WIDTH/20) + (y1*-1);
-			}else{
-				y1 = (WIDTH/20) - y1;
-			}
-			
-			if(y2 < 0){
-				y2 = (WIDTH/20) + (y2*-1);
-			}else{
-				y2 = (WIDTH/20) - y2;
-			}
-			
-			using (Graphics gfx = Graphics.FromImage(pictureBox1.Image)){
-				gfx.DrawLine(new Pen(Color.OrangeRed),
-				             (x1*10),
-				             (y1*10),
-				             (x2*20),
-				             (y2*10));
-			}
-			
-			graphicImage.Refresh();
-			pictureBox1.Refresh();
+			mlp.createMLP(layers);
 		}
 	}
 }
