@@ -243,7 +243,7 @@ namespace Practica_1___IA_2
 		}
 		
 		//Adaline
-		void StartMLPClick(object sender, EventArgs e)
+		void StartAdalineClick(object sender, EventArgs e)
 		{
 			int epoch = 0;
 			float error = 0;
@@ -288,7 +288,7 @@ namespace Practica_1___IA_2
 		float FwSingle(float w){
 			float sum = 0;
 			
-			sum = (float)(1 / (1 + Math.Exp(-sum)));
+			sum = (float)(1 / (1 + Math.Exp(-w)));
 			
 			return sum;
 		}
@@ -466,8 +466,43 @@ namespace Practica_1___IA_2
 			
 			mlp.createMLP(layers);
 			drawLines(mlp.getFirstLayer());
-			
+		}
+		
+		void StartMLPClick(object sender, EventArgs e)
+		{
 			mlp.trainMLP(points, epochs, ETA);
+			evaluateAll();
+		}
+		
+		void evaluateAll(){
+			for(int i=0; i<HEIGHT; i++){
+				for(int j=0; j<WIDTH; j++){
+					bitmap2.SetPixel(j,i,Color.Transparent);
+				}
+			}
+			
+			for(int i=0; i<HEIGHT; i++){
+				for(int j=0; j<WIDTH; j++){
+					if(bitmap.GetPixel(j,i).R == 255 && bitmap.GetPixel(j,i).G == 255 && bitmap.GetPixel(j,i).B == 255){
+						Point rp = new Point(j,i);
+						
+						PointValue pv = new PointValue();
+						
+						pv.X = (float)(-(WIDTH/2) + rp.X)/10;
+						pv.Y = (float)(HEIGHT/2 - rp.Y)/10;
+						pv.V = mlp.predict(pv);
+						
+						if(pv.V >= .5){
+							bitmap.SetPixel(j,i, Color.FromArgb(200,0,0));
+						}else{
+							bitmap.SetPixel(j,i, Color.FromArgb(0,0,200));
+						}
+					}
+				}
+			}
+			
+			graphicImage.Refresh();
+			pictureBox2.Refresh();
 		}
 	}
 }

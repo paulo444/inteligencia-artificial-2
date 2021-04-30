@@ -23,6 +23,8 @@ namespace Practica_1___IA_2
 	{
 		List<float[,]> W;
 		List<float[,]> B;
+		List<float[,]> S;
+		List<float[,]> A;
 		
 		public MLP()
 		{
@@ -32,13 +34,19 @@ namespace Practica_1___IA_2
 		public void createMLP(List<int> layers){
 			W = new List<float[,]>();
 			B = new List<float[,]>();
+			S = new List<float[,]>();
+			A = new List<float[,]>();
 			
 			W.Add(new float[1,1]);
 			B.Add(new float[1,1]);
+			S.Add(new float[1,1]);
+			A.Add(new float[1,1]);
 			
 			for(int i=1; i<layers.Count; i++){
 				W.Add(new float[layers[i], layers[i-1]+1]);
-				B.Add(new float[layers[i]+1, 1]);
+				B.Add(new float[layers[i], 1]);
+				S.Add(new float[layers[i], 1]);
+				A.Add(new float[layers[i-1]+1, 1]);
 			}
 			
 			setRandomData();
@@ -56,10 +64,22 @@ namespace Practica_1___IA_2
 			}
 			
 			for(int i=1; i<B.Count; i++){
-				B[i][0,0] = -1;
-				
-				for(int j=1; j<W[i].GetUpperBound(0)+1; j++){
+				for(int j=0; j<B[i].GetUpperBound(0)+1; j++){
 					B[i][j,0] = (float)GetRandomNumber(-5, 5, random);
+				}
+			}
+			
+			for(int i=1; i<S.Count; i++){
+				for(int j=0; j<S[i].GetUpperBound(0)+1; j++){
+					S[i][j,0] = (float)GetRandomNumber(-5, 5, random);
+				}
+			}
+			
+			for(int i=1; i<A.Count; i++){
+				A[i][0,0] = -1;
+				
+				for(int j=1; j<A[i].GetUpperBound(0)+1; j++){
+					A[i][j,0] = (float)GetRandomNumber(-5, 5, random);
 				}
 			}
 		}
@@ -74,20 +94,83 @@ namespace Practica_1___IA_2
 		}
 		
 		public void trainMLP(List<PointValue> pv, int e, float lr){
+			float[,] pvVector;
+			
 			for(int i=0; i<e; i++){
 				for(int j=0; j<pv.Count; j++){
-					float[,] pvVector = new float[3,1];
+					pvVector = new float[3,1];
 					pvVector[0,0] = -1;
 					pvVector[1,0] = pv[j].X;
 					pvVector[2,0] = pv[j].Y;
 					
-					for(int k=1; i<W.Count;i++){
-						float[,] resultMatrix = multiplyMatrix(W[k], pvVector);
-						
-						
+					A[0] = pvVector;
+					
+					for(int k=1; k<W.Count;k++){
+						B[k] = multiplyMatrix(W[k], pvVector);
+						pvVector = FwVector(B[k]);
+						A[k] = pvVector;
 					}
+
+					
+					
+					
+					
+					S[S.Count-1] = multiplyByTwo(FwVectorBack(B[S.Count-1]));
+					S[S.Count-1] = multiplyMatrix(S[S.Count-1], errorVector(pv[j].V));
 				}
 			}
+		}
+		
+		public float predict(PointValue pv){
+			float[,] pvVector;
+
+			pvVector = new float[3,1];
+			pvVector[0,0] = -1;
+			pvVector[1,0] = pv.X;
+			pvVector[2,0] = pv.Y;
+			
+			for(int k=1; k<W.Count;k++){
+				B[k] = multiplyMatrix(W[k], pvVector);
+				pvVector = FwVector(B[k]);
+			}
+
+			return pvVector[1,0];
+		}
+		
+		float[,] FwVector(float[,] ws){
+			float[,] sum = new float[ws.GetUpperBound(0)+2,1];
+			
+			sum[0,0] = -1;
+			
+			for(int i=1; i<ws.GetUpperBound(0)+2; i++){
+				sum[i,0] = (float)(1 / (1 + Math.Exp(-ws[i-1,0])));
+			}
+			
+			return sum;
+		}
+		
+		float[,] FwVectorBack(float[,] ws){
+			float[,] sum = new float[ws.GetUpperBound(0)+1,1];
+			
+			for(int i=0; i<ws.GetUpperBound(0)+1; i++){
+				sum[i,0] = (float)(1 / (1 + Math.Exp(-ws[i,0])));
+			}
+			
+			return sum;
+		}
+		
+		float[,] errorVector(float expectedValue){
+			float[,] errors = new float[B[B.Count-1].GetUpperBound(0)+1 ,1];
+			
+			for(int i=0; i<errors.GetUpperBound(0)+1; i++){
+				if(expectedValue == i){
+					errors[i,0] = 1 - A[A.Count-1][i+1,0];
+				}else{
+					errors[i,0] = 0 - A[A.Count-1][i+1,0];
+				}
+			}
+			
+			return errors;
 		}
 		
 		float[,] predictValue(PointValue pv){
@@ -105,7 +188,7 @@ namespace Practica_1___IA_2
 		}
 		
 		float[,] multiplyMatrix(float[,] a, float[,] b){
-			float[,] c = new float[a.GetUpperBound(0)+1,1];
+			float[,] c = new float[a.GetUpperBound(0)+1, b.GetUpperBound(1)+1];
 			
 			for (int i=0; i<a.GetUpperBound(0)+1; i++) {
 				for (int j=0; j<b.GetUpperBound(1)+1; j++) {
@@ -115,6 +198,16 @@ namespace Practica_1___IA_2
 				}
 			}
 			return c;
+		}
+		
+		float[,] multiplyByTwo(float[,] a){
+			for (int i=0; i<a.GetUpperBound(0)+1; i++) {
+				for (int j=0; j<a.GetUpperBound(1)+1; j++) {
+					a[i,j] = a[i,j] * -2;
+				}
+			}
+			
+			return a;
 		}
 		
 		float[,] addMatrix(float[,] a, float[,] b){
