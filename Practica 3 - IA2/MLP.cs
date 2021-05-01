@@ -115,8 +115,34 @@ namespace Practica_1___IA_2
 					
 					
 					
-					S[S.Count-1] = multiplyByTwo(FwVectorBack(B[S.Count-1]));
-					S[S.Count-1] = multiplyMatrix(S[S.Count-1], errorVector(pv[j].V));
+					float[,] errorV = errorVector(pv[j].V);
+					float[,] fwVector = FwVectorBack(B[B.Count-1]);
+					float[,] transposeV;
+					
+					for(int k=0; k<errorV.GetUpperBound(0)+1; k++){
+						errorV[k,0] = -2 * errorV[k,0] * fwVector[k,0];
+					}
+					S[S.Count-1] = errorV;
+					
+					for(int k=S.Count-2; k>0; k--){
+						fwVector = new float[S[k].GetUpperBound(0)+1, S[k].GetUpperBound(0)+1];
+						transposeV = removeFirst(W[k+1]);
+						transposeV = transposeMatrix(transposeV);
+						fwVector = multiplyMatrix(transposeV, S[k+1]);
+					}
+					
+					
+					
+					float[,] addW;
+					
+					for(int k=S.Count-1; k>0; k--){
+						addW = multiplyMatrix(S[k], transposeMatrix(A[k-1]));
+						addW = multiplyByNumber(addW, -lr);
+						
+						W[k] = addMatrix(W[k], addW);
+					}
+					
+					
 				}
 			}
 		}
@@ -173,6 +199,18 @@ namespace Practica_1___IA_2
 			return errors;
 		}
 		
+		float[,] removeFirst(float[,] a){
+			float[,] b = new float[a.GetUpperBound(0)+1,a.GetUpperBound(1)];
+			
+			for(int i=0; i<a.GetUpperBound(0)+1; i++){
+				for(int j=0; j<a.GetUpperBound(1); j++){
+					b[i,j] = a[i,j+1];
+				}
+			}
+			
+			return b;
+		}
+		
 		float[,] predictValue(PointValue pv){
 			float[,] pvVector = new float[2,1];
 			pvVector[0,0] = pv.X;
@@ -200,10 +238,10 @@ namespace Practica_1___IA_2
 			return c;
 		}
 		
-		float[,] multiplyByTwo(float[,] a){
+		float[,] multiplyByNumber(float[,] a, float n){
 			for (int i=0; i<a.GetUpperBound(0)+1; i++) {
 				for (int j=0; j<a.GetUpperBound(1)+1; j++) {
-					a[i,j] = a[i,j] * -2;
+					a[i,j] = a[i,j] * n;
 				}
 			}
 			
@@ -211,7 +249,7 @@ namespace Practica_1___IA_2
 		}
 		
 		float[,] addMatrix(float[,] a, float[,] b){
-			float[,] c = new float[a.GetUpperBound(0)+1,1];
+			float[,] c = new float[a.GetUpperBound(0)+1, a.GetUpperBound(1)+1];
 			
 			for(int i=0; i<a.GetUpperBound(0)+1; i++){
 				for (int j=0; j<b.GetUpperBound(1)+1; j++) {
@@ -219,6 +257,20 @@ namespace Practica_1___IA_2
 				}
 			}
 			return c;
+		}
+		
+		float[,] transposeMatrix(float[,] a){
+			float[,] b = new float[a.GetUpperBound(1)+1, a.GetUpperBound(0)+1];
+
+			for (int i = 0; i < a.GetUpperBound(0)+1; i++)
+			{
+				for (int j = 0; j < a.GetUpperBound(1)+1; j++)
+				{
+					b[j, i] = a[i, j];
+				}
+			}
+			
+			return b;
 		}
 		
 		float[,] Fw(float[,] pv, int b){
