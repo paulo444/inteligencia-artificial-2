@@ -93,11 +93,16 @@ namespace Practica_1___IA_2
 			return W[1];
 		}
 		
-		public void trainMLP(List<PointValue> pv, int e, float lr){
+		public void trainMLP(List<PointValue> pv, int e, float lr, float er, int errorsWidth, int errorsHeight, Bitmap bm, PictureBox pb,
+		                    Label lbl){
 			float[,] pvVector;
+			float currentError = 1;
+			int i, j;
 			
-			for(int i=0; i<e; i++){
-				for(int j=0; j<pv.Count; j++){
+			for(i=0; i<e && currentError > er; i++){
+				currentError = 0;
+				
+				for(j=0; j<pv.Count; j++){
 					pvVector = new float[3,1];
 					pvVector[0,0] = -1;
 					pvVector[1,0] = pv[j].X;
@@ -118,6 +123,8 @@ namespace Practica_1___IA_2
 					float[,] errorV = errorVector(pv[j].V);
 					float[,] fwVector = FwVectorBack(B[B.Count-1]);
 					float[,] transposeV;
+					
+					currentError += errorV[(int)(pv[j].V), 0] * errorV[(int)(pv[j].V), 0];
 					
 					for(int k=0; k<errorV.GetUpperBound(0)+1; k++){
 						errorV[k,0] = -2 * errorV[k,0] * fwVector[k,0];
@@ -140,14 +147,19 @@ namespace Practica_1___IA_2
 						addW = multiplyByNumber(addW, -lr);
 						
 						W[k] = addMatrix(W[k], addW);
+						B[k] = multiplyByNumber(S[k], lr);
 					}
 					
 					
+
 				}
+				currentError = currentError / pv.Count;
+				drawCuadraticError(i*2, (int)(currentError*errorsHeight), errorsWidth, errorsHeight, bm, pb);
 			}
+			lbl.Text = "#Epochs: " + i.ToString();
 		}
 		
-		public float predict(PointValue pv){
+		public float[,] predict(PointValue pv){
 			float[,] pvVector;
 
 			pvVector = new float[3,1];
@@ -160,7 +172,7 @@ namespace Practica_1___IA_2
 				pvVector = FwVector(B[k]);
 			}
 
-			return pvVector[1,0];
+			return pvVector;
 		}
 		
 		float[,] FwVector(float[,] ws){
@@ -211,20 +223,6 @@ namespace Practica_1___IA_2
 			return b;
 		}
 		
-		float[,] predictValue(PointValue pv){
-			float[,] pvVector = new float[2,1];
-			pvVector[0,0] = pv.X;
-			pvVector[1,0] = pv.Y;
-			
-			for(int i=1; i<W.Count; i++){
-				float[,] resultVector = multiplyMatrix(W[i], pvVector);
-				resultVector = addMatrix(resultVector, B[i]);
-				pvVector = Fw(resultVector, i);
-			}
-			
-			return pvVector;
-		}
-		
 		float[,] multiplyMatrix(float[,] a, float[,] b){
 			float[,] c = new float[a.GetUpperBound(0)+1, b.GetUpperBound(1)+1];
 			
@@ -273,15 +271,20 @@ namespace Practica_1___IA_2
 			return b;
 		}
 		
-		float[,] Fw(float[,] pv, int b){
-			float[,] sum = new float[pv.GetUpperBound(0)+1, 1];
-			
-			for(int i=0; i<pv.GetUpperBound(0)+1; i++){
-				sum[i,0] = W[b][i,0] + (W[b][i,1]*pv[0,0]) + (W[b][i,2]*pv[1,0]);
-				sum[i,0] = (float)(1 / (1 + Math.Exp(-sum[i,0])));
+		void drawCuadraticError(int x, int y, int errorW, int errorH, Bitmap bm, PictureBox pb){
+			if(x >= errorW){
+				return;
 			}
 			
-			return sum;
+			if(y >= errorH){
+				y = errorH-1;
+			}
+			
+			for(int i=errorH-1; i>errorH-y; i--){
+				bm.SetPixel(x, i, Color.Silver);
+			}
+			
+			pb.Refresh();
 		}
 	}
 }

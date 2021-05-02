@@ -470,7 +470,8 @@ namespace Practica_1___IA_2
 		
 		void StartMLPClick(object sender, EventArgs e)
 		{
-			mlp.trainMLP(points, epochs, ETA);
+			createErrorGraphic();
+			mlp.trainMLP(points, epochs, ETA, EXPECTED_ERROR, ERRORS_WIDTH, ERRORS_HEIGHT, bitmap3, pictureBox2, labelEpochs);
 			evaluateAll();
 		}
 		
@@ -490,13 +491,18 @@ namespace Practica_1___IA_2
 						
 						pv.X = (float)(-(WIDTH/2) + rp.X)/10;
 						pv.Y = (float)(HEIGHT/2 - rp.Y)/10;
-						pv.V = mlp.predict(pv);
+						float[,] prediction = mlp.predict(pv);
+						float color = -1;
+						int colorIndex = 0;
 						
-						if(pv.V >= .5){
-							bitmap.SetPixel(j,i, Color.FromArgb(200,0,0));
-						}else{
-							bitmap.SetPixel(j,i, Color.FromArgb(0,0,200));
+						for(int k=1; k<prediction.GetUpperBound(0)+1; k++){
+							if(color < prediction[k,0]){
+								colorIndex = k-1;
+								color = prediction[k,0];
+							}
 						}
+						
+						bitmap.SetPixel(j,i, classes.getColorClass(colorIndex));
 					}
 				}
 			}
