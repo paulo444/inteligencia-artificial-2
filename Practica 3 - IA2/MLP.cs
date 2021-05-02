@@ -94,13 +94,14 @@ namespace Practica_1___IA_2
 		}
 		
 		public void trainMLP(List<PointValue> pv, int e, float lr, float er, int errorsWidth, int errorsHeight, Bitmap bm, PictureBox pb,
-		                    Label lbl){
+		                    Label lbl, Bitmap bm2, PictureBox pb2){
 			float[,] pvVector;
 			float currentError = 1;
 			int i, j;
 			
 			for(i=0; i<e && currentError > er; i++){
 				currentError = 0;
+				drawLines(getFirstLayer(), bm2, pb2);
 				
 				for(j=0; j<pv.Count; j++){
 					pvVector = new float[3,1];
@@ -132,10 +133,13 @@ namespace Practica_1___IA_2
 					S[S.Count-1] = errorV;
 					
 					for(int k=S.Count-2; k>0; k--){
-						fwVector = new float[S[k].GetUpperBound(0)+1, S[k].GetUpperBound(0)+1];
+						fwVector = FwVectorBack(B[k]);
+						fwVector = FwVectorPoint(fwVector);
 						transposeV = removeFirst(W[k+1]);
 						transposeV = transposeMatrix(transposeV);
-						fwVector = multiplyMatrix(transposeV, S[k+1]);
+						fwVector = multiplyMatrix(fwVector, transposeV);
+						fwVector = multiplyMatrix(fwVector, S[k+1]);
+						S[k] = fwVector;
 					}
 					
 					
@@ -147,7 +151,7 @@ namespace Practica_1___IA_2
 						addW = multiplyByNumber(addW, -lr);
 						
 						W[k] = addMatrix(W[k], addW);
-						B[k] = multiplyByNumber(S[k], lr);
+						//B[k] = multiplyByNumber(S[k], lr);
 					}
 					
 					
@@ -156,7 +160,12 @@ namespace Practica_1___IA_2
 				currentError = currentError / pv.Count;
 				drawCuadraticError(i*2, (int)(currentError*errorsHeight), errorsWidth, errorsHeight, bm, pb);
 			}
-			lbl.Text = "#Epochs: " + i.ToString();
+			
+			if(i < e){
+				lbl.Text = "#Epochs: " + i.ToString();
+			}else{
+				lbl.Text = "#Epochs: NO";
+			}
 		}
 		
 		public float[,] predict(PointValue pv){
@@ -192,6 +201,7 @@ namespace Practica_1___IA_2
 			
 			for(int i=0; i<ws.GetUpperBound(0)+1; i++){
 				sum[i,0] = (float)(1 / (1 + Math.Exp(-ws[i,0])));
+				sum[i,0] = sum[i,0] * (1 - sum[i,0]);
 			}
 			
 			return sum;
@@ -271,6 +281,16 @@ namespace Practica_1___IA_2
 			return b;
 		}
 		
+		float[,] FwVectorPoint(float[,] a){
+			float[,] b = new float[a.GetUpperBound(0)+1, a.GetUpperBound(0)+1];
+			
+			for(int i=0; i<a.GetUpperBound(0)+1; i++){
+				b[i,i] = a[i,0];
+			}
+			
+			return b;
+		}
+		
 		void drawCuadraticError(int x, int y, int errorW, int errorH, Bitmap bm, PictureBox pb){
 			if(x >= errorW){
 				return;
@@ -282,6 +302,55 @@ namespace Practica_1___IA_2
 			
 			for(int i=errorH-1; i>errorH-y; i--){
 				bm.SetPixel(x, i, Color.Silver);
+			}
+			
+			pb.Refresh();
+		}
+		
+		void drawLines(float[,] ws, Bitmap bm, PictureBox pb){
+			const int HEIGHT = 100;
+			const int WIDTH = 100;
+			
+			for(int i=0; i<HEIGHT; i++){
+				for(int j=0; j<WIDTH; j++){
+					bm.SetPixel(j,i,Color.Transparent);
+				}
+			}
+			
+			for(int i=0; i<ws.GetUpperBound(0)+1; i++){
+				int x1 = -WIDTH/20;
+				int x2 = WIDTH/20;
+				
+				int y1 = 0;
+				int y2 = 0;
+				
+				if(ws[i,2] != 0){
+					y1 = (int)(-(ws[i,1]*x1+ws[i,0])/ws[i,2]);
+					y2 = (int)(-(ws[i,1]*x2+ws[i,0])/ws[i,2]);
+				}
+				
+				x1 = x1 + WIDTH/20;
+				
+				if(y1 < 0){
+					y1 = (WIDTH/20) + (y1*-1);
+				}else{
+					y1 = (WIDTH/20) - y1;
+				}
+				
+				if(y2 < 0){
+					y2 = (WIDTH/20) + (y2*-1);
+				}else{
+					y2 = (WIDTH/20) - y2;
+				}
+				
+				using (Graphics gfx = Graphics.FromImage(pb.Image)){
+					gfx.DrawLine(new Pen(Color.OrangeRed),
+					             (x1*10),
+					             (y1*10),
+					             (x2*20),
+					             (y2*10));
+				}
+				
 			}
 			
 			pb.Refresh();

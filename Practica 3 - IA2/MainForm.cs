@@ -452,9 +452,6 @@ namespace Practica_1___IA_2
 		
 		void ButtonCreateArquitectureClick(object sender, EventArgs e)
 		{
-			//setRandomValues();
-			//drawLine();
-			
 			List<int> layers = new List<int>();
 			
 			layers.Add(2);
@@ -471,7 +468,8 @@ namespace Practica_1___IA_2
 		void StartMLPClick(object sender, EventArgs e)
 		{
 			createErrorGraphic();
-			mlp.trainMLP(points, epochs, ETA, EXPECTED_ERROR, ERRORS_WIDTH, ERRORS_HEIGHT, bitmap3, pictureBox2, labelEpochs);
+			mlp.trainMLP(points, epochs, ETA, EXPECTED_ERROR, ERRORS_WIDTH, ERRORS_HEIGHT, bitmap3, pictureBox2, labelEpochs,
+			            bitmap2, pictureBox1);
 			evaluateAll();
 		}
 		
