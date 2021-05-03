@@ -52,6 +52,8 @@ namespace Practica_1___IA_2
 		int classNumber;
 		int hiddenLayers;
 		
+		int batchSize;
+		
 		public MainForm()
 		{
 			InitializeComponent();
@@ -201,6 +203,7 @@ namespace Practica_1___IA_2
 			EXPECTED_ERROR = .1f;
 			classNumber = 3;
 			hiddenLayers = 3;
+			batchSize = 3;
 			
 			textBox1.Text = ETA.ToString();
 			textBox2.Text = epochs.ToString();
@@ -208,6 +211,8 @@ namespace Practica_1___IA_2
 			textBoxClasses.Text = classNumber.ToString();
 			textBoxArquitecture.Text = hiddenLayers.ToString();
 			comboBoxClasses.Text = "0";
+			textBoxBatches.Text = batchSize.ToString();
+			radioButton1.Checked = true;
 			setClasses();
 		}
 		
@@ -240,6 +245,17 @@ namespace Practica_1___IA_2
 				return;
 			}
 			EXPECTED_ERROR = float.Parse(textBox3.Text);
+		}
+		
+				
+		void TextBoxBatchesTextChanged(object sender, EventArgs e)
+		{
+			int parsedValue;
+			if (!int.TryParse(textBoxBatches.Text, out parsedValue))
+			{
+				return;
+			}
+			batchSize = int.Parse(textBoxBatches.Text);
 		}
 		
 		//Adaline
@@ -468,8 +484,15 @@ namespace Practica_1___IA_2
 		void StartMLPClick(object sender, EventArgs e)
 		{
 			createErrorGraphic();
-			mlp.trainMLP(points, epochs, ETA, EXPECTED_ERROR, ERRORS_WIDTH, ERRORS_HEIGHT, bitmap3, pictureBox2, labelEpochs,
+			
+			if(radioButton1.Checked){
+				mlp.trainMLP(points, epochs, ETA, EXPECTED_ERROR, ERRORS_WIDTH, ERRORS_HEIGHT, bitmap3, pictureBox2, labelEpochs,
 			            bitmap2, pictureBox1);
+			}else{
+				mlp.trainMLPBatches(points, epochs, ETA, EXPECTED_ERROR, ERRORS_WIDTH, ERRORS_HEIGHT, bitmap3, pictureBox2, labelEpochs,
+			            bitmap2, pictureBox1, batchSize);
+			}
+
 			evaluateAll();
 		}
 		
@@ -495,7 +518,7 @@ namespace Practica_1___IA_2
 						
 						for(int k=1; k<prediction.GetUpperBound(0)+1; k++){
 							if(color < prediction[k,0]){
-								colorIndex = k-1;
+								colorIndex = k;
 								color = prediction[k,0];
 							}
 						}

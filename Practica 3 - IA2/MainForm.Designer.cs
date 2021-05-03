@@ -62,6 +62,10 @@ namespace Practica_1___IA_2
 			this.Neuronas = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.buttonCreateArquitecture = new System.Windows.Forms.Button();
 			this.labelEpochs = new System.Windows.Forms.Label();
+			this.radioButton1 = new System.Windows.Forms.RadioButton();
+			this.radioButton2 = new System.Windows.Forms.RadioButton();
+			this.textBoxBatches = new System.Windows.Forms.TextBox();
+			this.label4 = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.graphicImage)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -288,17 +292,58 @@ namespace Practica_1___IA_2
 			// 
 			// labelEpochs
 			// 
-			this.labelEpochs.Location = new System.Drawing.Point(602, 603);
+			this.labelEpochs.Location = new System.Drawing.Point(537, 650);
 			this.labelEpochs.Name = "labelEpochs";
 			this.labelEpochs.Size = new System.Drawing.Size(111, 23);
 			this.labelEpochs.TabIndex = 34;
 			this.labelEpochs.Text = "# Epochs: ";
+			// 
+			// radioButton1
+			// 
+			this.radioButton1.Location = new System.Drawing.Point(605, 582);
+			this.radioButton1.Name = "radioButton1";
+			this.radioButton1.Size = new System.Drawing.Size(104, 24);
+			this.radioButton1.TabIndex = 35;
+			this.radioButton1.TabStop = true;
+			this.radioButton1.Text = "Completo";
+			this.radioButton1.UseVisualStyleBackColor = true;
+			// 
+			// radioButton2
+			// 
+			this.radioButton2.Location = new System.Drawing.Point(605, 612);
+			this.radioButton2.Name = "radioButton2";
+			this.radioButton2.Size = new System.Drawing.Size(104, 24);
+			this.radioButton2.TabIndex = 36;
+			this.radioButton2.TabStop = true;
+			this.radioButton2.Text = "Batches";
+			this.radioButton2.UseVisualStyleBackColor = true;
+			// 
+			// textBoxBatches
+			// 
+			this.textBoxBatches.Location = new System.Drawing.Point(729, 620);
+			this.textBoxBatches.Name = "textBoxBatches";
+			this.textBoxBatches.Size = new System.Drawing.Size(100, 22);
+			this.textBoxBatches.TabIndex = 37;
+			this.textBoxBatches.TextChanged += new System.EventHandler(this.TextBoxBatchesTextChanged);
+			// 
+			// label4
+			// 
+			this.label4.Location = new System.Drawing.Point(729, 583);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(100, 34);
+			this.label4.TabIndex = 38;
+			this.label4.Text = "Tamaño Batches";
+			this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(845, 689);
+			this.Controls.Add(this.label4);
+			this.Controls.Add(this.textBoxBatches);
+			this.Controls.Add(this.radioButton2);
+			this.Controls.Add(this.radioButton1);
 			this.Controls.Add(this.labelEpochs);
 			this.Controls.Add(this.buttonCreateArquitecture);
 			this.Controls.Add(this.dataGridView2);
@@ -332,6 +377,10 @@ namespace Practica_1___IA_2
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.TextBox textBoxBatches;
+		private System.Windows.Forms.RadioButton radioButton2;
+		private System.Windows.Forms.RadioButton radioButton1;
 		private System.Windows.Forms.Label labelEpochs;
 		private System.Windows.Forms.Button buttonCreateArquitecture;
 		private System.Windows.Forms.DataGridViewTextBoxColumn Neuronas;

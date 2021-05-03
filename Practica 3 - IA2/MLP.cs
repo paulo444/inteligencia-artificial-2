@@ -117,10 +117,6 @@ namespace Practica_1___IA_2
 						A[k] = pvVector;
 					}
 
-					
-					
-					
-					
 					float[,] errorV = errorVector(pv[j].V);
 					float[,] fwVector = FwVectorBack(B[B.Count-1]);
 					float[,] transposeV;
@@ -142,8 +138,6 @@ namespace Practica_1___IA_2
 						S[k] = fwVector;
 					}
 					
-					
-					
 					float[,] addW;
 					
 					for(int k=S.Count-1; k>0; k--){
@@ -151,11 +145,77 @@ namespace Practica_1___IA_2
 						addW = multiplyByNumber(addW, -lr);
 						
 						W[k] = addMatrix(W[k], addW);
-						//B[k] = multiplyByNumber(S[k], lr);
 					}
+				}
+				currentError = currentError / pv.Count;
+				drawCuadraticError(i*2, (int)(currentError*errorsHeight), errorsWidth, errorsHeight, bm, pb);
+			}
+			
+			if(i < e){
+				lbl.Text = "#Epochs: " + i.ToString();
+			}else{
+				lbl.Text = "#Epochs: NO";
+			}
+		}
+		
+		public void trainMLPBatches(List<PointValue> pv, int e, float lr, float er, int errorsWidth, int errorsHeight, Bitmap bm, PictureBox pb,
+		                    Label lbl, Bitmap bm2, PictureBox pb2, int batchSize){
+			float[,] pvVector;
+			float currentError = 1;
+			int i, j;
+			
+			Random random = new Random();
+			int currentPoint;
+			
+			for(i=0; i<e && currentError > er; i++){
+				currentError = 0;
+				drawLines(getFirstLayer(), bm2, pb2);
+				
+				currentPoint = random.Next(1, batchSize+1);
+				
+				for(j=currentPoint; j<pv.Count; j+=batchSize){
+					pvVector = new float[3,1];
+					pvVector[0,0] = -1;
+					pvVector[1,0] = pv[j].X;
+					pvVector[2,0] = pv[j].Y;
 					
+					A[0] = pvVector;
 					
+					for(int k=1; k<W.Count;k++){
+						B[k] = multiplyMatrix(W[k], pvVector);
+						pvVector = FwVector(B[k]);
+						A[k] = pvVector;
+					}
 
+					float[,] errorV = errorVector(pv[j].V);
+					float[,] fwVector = FwVectorBack(B[B.Count-1]);
+					float[,] transposeV;
+					
+					currentError += errorV[(int)(pv[j].V), 0] * errorV[(int)(pv[j].V), 0];
+					
+					for(int k=0; k<errorV.GetUpperBound(0)+1; k++){
+						errorV[k,0] = -2 * errorV[k,0] * fwVector[k,0];
+					}
+					S[S.Count-1] = errorV;
+					
+					for(int k=S.Count-2; k>0; k--){
+						fwVector = FwVectorBack(B[k]);
+						fwVector = FwVectorPoint(fwVector);
+						transposeV = removeFirst(W[k+1]);
+						transposeV = transposeMatrix(transposeV);
+						fwVector = multiplyMatrix(fwVector, transposeV);
+						fwVector = multiplyMatrix(fwVector, S[k+1]);
+						S[k] = fwVector;
+					}
+
+					float[,] addW;
+					
+					for(int k=S.Count-1; k>0; k--){
+						addW = multiplyMatrix(S[k], transposeMatrix(A[k-1]));
+						addW = multiplyByNumber(addW, -lr);
+						
+						W[k] = addMatrix(W[k], addW);
+					}
 				}
 				currentError = currentError / pv.Count;
 				drawCuadraticError(i*2, (int)(currentError*errorsHeight), errorsWidth, errorsHeight, bm, pb);
