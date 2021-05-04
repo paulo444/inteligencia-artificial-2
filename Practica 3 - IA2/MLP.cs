@@ -121,7 +121,12 @@ namespace Practica_1___IA_2
 					float[,] fwVector = FwVectorBack(B[B.Count-1]);
 					float[,] transposeV;
 					
-					currentError += errorV[(int)(pv[j].V), 0] * errorV[(int)(pv[j].V), 0];
+					float cError = 0;
+					for(int k=0; k<errorV.GetUpperBound(0)+1; k++){
+						cError += Math.Abs(errorV[k, 0]);
+					}
+					cError = cError/(errorV.GetUpperBound(0)+1);
+					currentError += cError * cError;
 					
 					for(int k=0; k<errorV.GetUpperBound(0)+1; k++){
 						errorV[k,0] = -2 * errorV[k,0] * fwVector[k,0];
@@ -191,7 +196,12 @@ namespace Practica_1___IA_2
 					float[,] fwVector = FwVectorBack(B[B.Count-1]);
 					float[,] transposeV;
 					
-					currentError += errorV[(int)(pv[j].V), 0] * errorV[(int)(pv[j].V), 0];
+					float cError = 0;
+					for(int k=0; k<errorV.GetUpperBound(0)+1; k++){
+						cError += Math.Abs(errorV[k, 0]);
+					}
+					cError = cError/(errorV.GetUpperBound(0)+1);
+					currentError += cError * cError;
 					
 					for(int k=0; k<errorV.GetUpperBound(0)+1; k++){
 						errorV[k,0] = -2 * errorV[k,0] * fwVector[k,0];
@@ -217,7 +227,7 @@ namespace Practica_1___IA_2
 						W[k] = addMatrix(W[k], addW);
 					}
 				}
-				currentError = currentError / pv.Count;
+				currentError = currentError / (pv.Count / batchSize);
 				drawCuadraticError(i*2, (int)(currentError*errorsHeight), errorsWidth, errorsHeight, bm, pb);
 			}
 			
