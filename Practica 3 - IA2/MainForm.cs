@@ -247,7 +247,7 @@ namespace Practica_1___IA_2
 			EXPECTED_ERROR = float.Parse(textBox3.Text);
 		}
 		
-				
+		
 		void TextBoxBatchesTextChanged(object sender, EventArgs e)
 		{
 			int parsedValue;
@@ -487,13 +487,14 @@ namespace Practica_1___IA_2
 			
 			if(radioButton1.Checked){
 				mlp.trainMLP(points, epochs, ETA, EXPECTED_ERROR, ERRORS_WIDTH, ERRORS_HEIGHT, bitmap3, pictureBox2, labelEpochs,
-			            bitmap2, pictureBox1);
+				             bitmap2, pictureBox1, labelError);
 			}else{
 				mlp.trainMLPBatches(points, epochs, ETA, EXPECTED_ERROR, ERRORS_WIDTH, ERRORS_HEIGHT, bitmap3, pictureBox2, labelEpochs,
-			            bitmap2, pictureBox1, batchSize);
+				                    bitmap2, pictureBox1, batchSize, labelError);
 			}
 
 			evaluateAll();
+			setResults();
 		}
 		
 		void evaluateAll(){
@@ -548,6 +549,42 @@ namespace Practica_1___IA_2
 			
 			graphicImage.Refresh();
 			pictureBox2.Refresh();
+		}
+		
+		void setResults(){
+			float[,] results = new float[classNumber,classNumber];
+			
+			dataGridView1.Columns.Add("start", " ");
+			for(int i=0; i<classNumber; i++){
+				dataGridView1.Columns.Add(i.ToString(), i.ToString());
+			}
+			
+			for(int i=0; i<points.Count; i++){
+				PointValue rp = points[i];
+
+				float[,] prediction = mlp.predict(rp);
+				float predicted = -1;
+				int predictedIndex = 0;
+				
+				for(int k=1; k<prediction.GetUpperBound(0)+1; k++){
+					if(predicted < prediction[k,0]){
+						predictedIndex = k-1;
+						predicted = prediction[k,0];
+					}
+				}
+				
+				results[(int)(rp.V), predictedIndex] = results[(int)(rp.V), predictedIndex] + 1;
+			}
+			
+			for(int i=0; i<classNumber; i++){
+				string[] data = new string[classNumber+1];
+				data[0] = i.ToString();
+				
+				for(int j=0; j<classNumber; j++){
+					data[j+1] = results[i,j].ToString();
+				}
+				dataGridView1.Rows.Add(data);
+			}
 		}
 	}
 }

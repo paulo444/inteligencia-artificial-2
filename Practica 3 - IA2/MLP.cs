@@ -94,7 +94,7 @@ namespace Practica_1___IA_2
 		}
 		
 		public void trainMLP(List<PointValue> pv, int e, float lr, float er, int errorsWidth, int errorsHeight, Bitmap bm, PictureBox pb,
-		                    Label lbl, Bitmap bm2, PictureBox pb2){
+		                    Label lbl, Bitmap bm2, PictureBox pb2, Label eL){
 			float[,] pvVector;
 			float currentError = 1;
 			int i, j;
@@ -154,6 +154,7 @@ namespace Practica_1___IA_2
 				}
 				currentError = currentError / pv.Count;
 				drawCuadraticError(i*2, (int)(currentError*errorsHeight), errorsWidth, errorsHeight, bm, pb);
+				eL.Text = "Error: " + currentError;
 			}
 			
 			if(i < e){
@@ -164,7 +165,7 @@ namespace Practica_1___IA_2
 		}
 		
 		public void trainMLPBatches(List<PointValue> pv, int e, float lr, float er, int errorsWidth, int errorsHeight, Bitmap bm, PictureBox pb,
-		                    Label lbl, Bitmap bm2, PictureBox pb2, int batchSize){
+		                    Label lbl, Bitmap bm2, PictureBox pb2, int batchSize, Label eL){
 			float[,] pvVector;
 			float currentError = 1;
 			int i, j;
@@ -229,6 +230,7 @@ namespace Practica_1___IA_2
 				}
 				currentError = currentError / (pv.Count / batchSize);
 				drawCuadraticError(i*2, (int)(currentError*errorsHeight), errorsWidth, errorsHeight, bm, pb);
+				eL.Text = "Error: " + currentError;
 			}
 			
 			if(i < e){

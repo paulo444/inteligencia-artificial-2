@@ -66,10 +66,14 @@ namespace Practica_1___IA_2
 			this.radioButton2 = new System.Windows.Forms.RadioButton();
 			this.textBoxBatches = new System.Windows.Forms.TextBox();
 			this.label4 = new System.Windows.Forms.Label();
+			this.label5 = new System.Windows.Forms.Label();
+			this.labelError = new System.Windows.Forms.Label();
+			this.dataGridView1 = new System.Windows.Forms.DataGridView();
 			((System.ComponentModel.ISupportInitialize)(this.graphicImage)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -102,7 +106,7 @@ namespace Practica_1___IA_2
 			// 
 			// label2
 			// 
-			this.label2.Location = new System.Drawing.Point(563, 12);
+			this.label2.Location = new System.Drawing.Point(556, 12);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(92, 23);
 			this.label2.TabIndex = 3;
@@ -110,7 +114,7 @@ namespace Practica_1___IA_2
 			// 
 			// textBox1
 			// 
-			this.textBox1.Location = new System.Drawing.Point(661, 12);
+			this.textBox1.Location = new System.Drawing.Point(654, 12);
 			this.textBox1.Name = "textBox1";
 			this.textBox1.Size = new System.Drawing.Size(116, 22);
 			this.textBox1.TabIndex = 4;
@@ -118,7 +122,7 @@ namespace Practica_1___IA_2
 			// 
 			// textBox2
 			// 
-			this.textBox2.Location = new System.Drawing.Point(661, 40);
+			this.textBox2.Location = new System.Drawing.Point(654, 40);
 			this.textBox2.Name = "textBox2";
 			this.textBox2.Size = new System.Drawing.Size(116, 22);
 			this.textBox2.TabIndex = 6;
@@ -126,7 +130,7 @@ namespace Practica_1___IA_2
 			// 
 			// label3
 			// 
-			this.label3.Location = new System.Drawing.Point(563, 40);
+			this.label3.Location = new System.Drawing.Point(556, 40);
 			this.label3.Name = "label3";
 			this.label3.Size = new System.Drawing.Size(92, 23);
 			this.label3.TabIndex = 5;
@@ -144,7 +148,7 @@ namespace Practica_1___IA_2
 			// 
 			// textBox3
 			// 
-			this.textBox3.Location = new System.Drawing.Point(661, 68);
+			this.textBox3.Location = new System.Drawing.Point(654, 68);
 			this.textBox3.Name = "textBox3";
 			this.textBox3.Size = new System.Drawing.Size(116, 22);
 			this.textBox3.TabIndex = 17;
@@ -152,7 +156,7 @@ namespace Practica_1___IA_2
 			// 
 			// label8
 			// 
-			this.label8.Location = new System.Drawing.Point(563, 68);
+			this.label8.Location = new System.Drawing.Point(556, 68);
 			this.label8.Name = "label8";
 			this.label8.Size = new System.Drawing.Size(92, 23);
 			this.label8.TabIndex = 16;
@@ -178,14 +182,14 @@ namespace Practica_1___IA_2
 			// 
 			// textBoxClasses
 			// 
-			this.textBoxClasses.Location = new System.Drawing.Point(664, 155);
+			this.textBoxClasses.Location = new System.Drawing.Point(654, 161);
 			this.textBoxClasses.Name = "textBoxClasses";
 			this.textBoxClasses.Size = new System.Drawing.Size(116, 22);
 			this.textBoxClasses.TabIndex = 23;
 			// 
 			// label12
 			// 
-			this.label12.Location = new System.Drawing.Point(566, 158);
+			this.label12.Location = new System.Drawing.Point(556, 164);
 			this.label12.Name = "label12";
 			this.label12.Size = new System.Drawing.Size(82, 23);
 			this.label12.TabIndex = 24;
@@ -194,14 +198,14 @@ namespace Practica_1___IA_2
 			// comboBoxClasses
 			// 
 			this.comboBoxClasses.FormattingEnabled = true;
-			this.comboBoxClasses.Location = new System.Drawing.Point(605, 220);
+			this.comboBoxClasses.Location = new System.Drawing.Point(595, 226);
 			this.comboBoxClasses.Name = "comboBoxClasses";
 			this.comboBoxClasses.Size = new System.Drawing.Size(121, 24);
 			this.comboBoxClasses.TabIndex = 25;
 			// 
 			// buttonClasses
 			// 
-			this.buttonClasses.Location = new System.Drawing.Point(618, 184);
+			this.buttonClasses.Location = new System.Drawing.Point(608, 190);
 			this.buttonClasses.Name = "buttonClasses";
 			this.buttonClasses.Size = new System.Drawing.Size(95, 23);
 			this.buttonClasses.TabIndex = 26;
@@ -212,7 +216,7 @@ namespace Practica_1___IA_2
 			// label13
 			// 
 			this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label13.Location = new System.Drawing.Point(618, 125);
+			this.label13.Location = new System.Drawing.Point(608, 125);
 			this.label13.Name = "label13";
 			this.label13.Size = new System.Drawing.Size(100, 23);
 			this.label13.TabIndex = 27;
@@ -222,7 +226,7 @@ namespace Practica_1___IA_2
 			// label14
 			// 
 			this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.label14.Location = new System.Drawing.Point(599, 284);
+			this.label14.Location = new System.Drawing.Point(583, 278);
 			this.label14.Name = "label14";
 			this.label14.Size = new System.Drawing.Size(143, 23);
 			this.label14.TabIndex = 28;
@@ -292,15 +296,15 @@ namespace Practica_1___IA_2
 			// 
 			// labelEpochs
 			// 
-			this.labelEpochs.Location = new System.Drawing.Point(537, 650);
+			this.labelEpochs.Location = new System.Drawing.Point(855, 57);
 			this.labelEpochs.Name = "labelEpochs";
-			this.labelEpochs.Size = new System.Drawing.Size(111, 23);
+			this.labelEpochs.Size = new System.Drawing.Size(150, 23);
 			this.labelEpochs.TabIndex = 34;
 			this.labelEpochs.Text = "# Epochs: ";
 			// 
 			// radioButton1
 			// 
-			this.radioButton1.Location = new System.Drawing.Point(605, 582);
+			this.radioButton1.Location = new System.Drawing.Point(546, 595);
 			this.radioButton1.Name = "radioButton1";
 			this.radioButton1.Size = new System.Drawing.Size(104, 24);
 			this.radioButton1.TabIndex = 35;
@@ -310,7 +314,7 @@ namespace Practica_1___IA_2
 			// 
 			// radioButton2
 			// 
-			this.radioButton2.Location = new System.Drawing.Point(605, 612);
+			this.radioButton2.Location = new System.Drawing.Point(546, 625);
 			this.radioButton2.Name = "radioButton2";
 			this.radioButton2.Size = new System.Drawing.Size(104, 24);
 			this.radioButton2.TabIndex = 36;
@@ -320,7 +324,7 @@ namespace Practica_1___IA_2
 			// 
 			// textBoxBatches
 			// 
-			this.textBoxBatches.Location = new System.Drawing.Point(729, 620);
+			this.textBoxBatches.Location = new System.Drawing.Point(670, 633);
 			this.textBoxBatches.Name = "textBoxBatches";
 			this.textBoxBatches.Size = new System.Drawing.Size(100, 22);
 			this.textBoxBatches.TabIndex = 37;
@@ -328,18 +332,51 @@ namespace Practica_1___IA_2
 			// 
 			// label4
 			// 
-			this.label4.Location = new System.Drawing.Point(729, 583);
+			this.label4.Location = new System.Drawing.Point(670, 596);
 			this.label4.Name = "label4";
 			this.label4.Size = new System.Drawing.Size(100, 34);
 			this.label4.TabIndex = 38;
 			this.label4.Text = "Tamaño Batches";
 			this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
+			// label5
+			// 
+			this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label5.Location = new System.Drawing.Point(876, 15);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(143, 23);
+			this.label5.TabIndex = 39;
+			this.label5.Text = "Resultados";
+			this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
+			// labelError
+			// 
+			this.labelError.Location = new System.Drawing.Point(855, 83);
+			this.labelError.Name = "labelError";
+			this.labelError.Size = new System.Drawing.Size(150, 23);
+			this.labelError.TabIndex = 40;
+			this.labelError.Text = "Error: ";
+			// 
+			// dataGridView1
+			// 
+			this.dataGridView1.AllowUserToAddRows = false;
+			this.dataGridView1.AllowUserToDeleteRows = false;
+			this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.dataGridView1.Location = new System.Drawing.Point(826, 125);
+			this.dataGridView1.Name = "dataGridView1";
+			this.dataGridView1.ReadOnly = true;
+			this.dataGridView1.RowTemplate.Height = 24;
+			this.dataGridView1.Size = new System.Drawing.Size(240, 224);
+			this.dataGridView1.TabIndex = 41;
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(845, 689);
+			this.ClientSize = new System.Drawing.Size(1101, 689);
+			this.Controls.Add(this.dataGridView1);
+			this.Controls.Add(this.labelError);
+			this.Controls.Add(this.label5);
 			this.Controls.Add(this.label4);
 			this.Controls.Add(this.textBoxBatches);
 			this.Controls.Add(this.radioButton2);
@@ -374,9 +411,13 @@ namespace Practica_1___IA_2
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 		}
+		private System.Windows.Forms.DataGridView dataGridView1;
+		private System.Windows.Forms.Label labelError;
+		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.TextBox textBoxBatches;
 		private System.Windows.Forms.RadioButton radioButton2;
