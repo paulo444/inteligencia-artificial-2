@@ -523,7 +523,25 @@ namespace Practica_1___IA_2
 							}
 						}
 						
-						bitmap.SetPixel(j,i, classes.getColorClass(colorIndex));
+						if(classNumber <= 7){
+							if(colorIndex-1 == 0){
+								bitmap.SetPixel(j,i, Color.FromArgb(getColor(color), 0, 0));
+							}else if(colorIndex-1 == 1){
+								bitmap.SetPixel(j,i, Color.FromArgb(0, getColor(color), 0));
+							}else if(colorIndex-1 == 2){
+								bitmap.SetPixel(j,i, Color.FromArgb(0, 0, getColor(color)));
+							}else if(colorIndex-1 == 3){
+								bitmap.SetPixel(j,i, Color.FromArgb(getColor(color), getColor(color), 0));
+							}else if(colorIndex-1 == 4){
+								bitmap.SetPixel(j,i, Color.FromArgb(getColor(color), 0, getColor(color)));
+							}else if(colorIndex-1 == 5){
+								bitmap.SetPixel(j,i, Color.FromArgb(0, getColor(color), getColor(color)));
+							}else if(colorIndex-1 == 6){
+								bitmap.SetPixel(j,i, Color.FromArgb(getColor(color), getColor(color), getColor(color)));
+							}
+						}else{
+							bitmap.SetPixel(j,i, classes.getColorClass(colorIndex));
+						}
 					}
 				}
 			}
