@@ -92,11 +92,11 @@ namespace Practica_1___IA_2
 			// 
 			// startAdaline
 			// 
-			this.startAdaline.Location = new System.Drawing.Point(218, 462);
+			this.startAdaline.Location = new System.Drawing.Point(199, 462);
 			this.startAdaline.Name = "startAdaline";
-			this.startAdaline.Size = new System.Drawing.Size(98, 23);
+			this.startAdaline.Size = new System.Drawing.Size(162, 27);
 			this.startAdaline.TabIndex = 2;
-			this.startAdaline.Text = "MLP";
+			this.startAdaline.Text = "Levenberg-Marquardt";
 			this.startAdaline.UseVisualStyleBackColor = true;
 			this.startAdaline.Click += new System.EventHandler(this.StartMLPClick);
 			// 
