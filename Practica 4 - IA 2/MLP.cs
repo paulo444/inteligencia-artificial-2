@@ -319,6 +319,140 @@ namespace Practica_1___IA_2
 			}
 		}
 		
+		public void trainQuickPropagation(List<PointValue> pv, int e, float lr, float er, int errorsWidth, int errorsHeight, Bitmap bm, PictureBox pb,
+		                                  Label lbl, Bitmap bm2, PictureBox pb2, Label eL){
+			float[,] pvVector;
+			float currentError = 1;
+			int i, j;
+			
+			List<float[,]> prevS = null;
+			List<float[,]> prevW = null;
+			float[,] increment = null;
+			
+			for(i=0; i<e && currentError > er; i++){
+				currentError = 0;
+				drawLines(getFirstLayer(), bm2, pb2);
+				
+				for(j=0; j<pv.Count; j++){
+					pvVector = new float[3,1];
+					pvVector[0,0] = -1;
+					pvVector[1,0] = pv[j].X;
+					pvVector[2,0] = pv[j].Y;
+					
+					A[0] = pvVector;
+					
+					for(int k=1; k<W.Count;k++){
+						B[k] = multiplyMatrix(W[k], pvVector);
+						pvVector = FwVector(B[k]);
+						A[k] = pvVector;
+					}
+
+					float[,] errorV = errorVector(pv[j].V);
+					float[,] fwVector = FwVectorBack(B[B.Count-1]);
+					float[,] transposeV;
+					
+					float cError = 0;
+					for(int k=0; k<errorV.GetUpperBound(0)+1; k++){
+						cError += errorV[k, 0] * errorV[k, 0];
+					}
+					
+					cError = (float)Math.Sqrt(cError);
+					currentError += cError * cError;
+					
+					for(int k=0; k<errorV.GetUpperBound(0)+1; k++){
+						errorV[k,0] = -2 * errorV[k,0] * fwVector[k,0];
+					}
+					S[S.Count-1] = errorV;
+					
+					for(int k=S.Count-2; k>0; k--){
+						fwVector = FwVectorBack(B[k]);
+						fwVector = FwVectorPoint(fwVector);
+						transposeV = removeFirst(W[k+1]);
+						transposeV = transposeMatrix(transposeV);
+						fwVector = multiplyMatrix(fwVector, transposeV);
+						//fwVector = multiplyMatrix(fwVector, S[k+1]);
+						S[k] = fwVector;
+					}
+					
+					float[,] addW = null;
+					
+					/*
+					if(i != 0){
+						List<float[,]> temp = new List<float[,]>(increment);
+						
+						for(int k=0; k<temp.Count; k++){
+							for(int l=0; l<temp[i].GetUpperBound(0)+1; l++){
+								for(int m=0; m<temp[i].GetUpperBound(1)+1; m++){
+									temp[k][l,m] = (S[k+1][l,m] / (prevS[k+1][l,m] - S[k+1][l,m])) * prevW[k][l,m];
+									
+									if(temp[k][l,m] > lr * prevW[k][l,m]){
+										temp[k][l,m] = lr * prevW[k][l,m];
+									}
+									
+									if(prevS[k][l,m] * S[k][l,m] < 0){
+										increment[k][l,m] = temp[k][l,m];
+									}else{
+										increment[k][l,m] = temp[k][l,m] + lr * S[k][l,m];
+									}
+									
+									W[k][l,m] = W[k][l,m] + increment[k][l,m];
+								}
+							}
+						}
+					}else{
+						increment = new List<float[,]>();
+						
+						for(int k=S.Count-1; k>0; k--){
+							addW = multiplyMatrix(S[k], transposeMatrix(A[k-1]));
+							addW = multiplyByNumber(addW, -lr);
+							
+							//W[k] = addMatrix(W[k], addW);
+							increment.Add(addW);
+						}
+					}
+					prevS.Add(new List<float[,]>(S));
+					prevW.Add(new List<float[,]>(increment));
+					 */
+					for(int k=S.Count-1; k>0; k--){
+						S[k] = S[k-1];
+						W[k] = W[k-1];
+						/*if(prevS[k+1][l,m] - S[k+1][l,m] == 0){
+							continue;
+						}
+						
+						temp[k][l,m] = (S[k+1][l,m] / (prevS[k+1][l,m] - S[k+1][l,m])) * prevW[k][l,m];
+						
+						if(temp[k][l,m] > lr * prevW[k][l,m]){
+							temp[k][l,m] = lr * prevW[k][l,m];
+						}
+						
+						if(prevS[k][l,m] * S[k][l,m] < 0){
+							increment[k][l,m] = temp[k][l,m];
+						}else{
+							increment[k][l,m] = temp[k][l,m] + lr * S[k][l,m];
+						}
+						
+						W[k][l,m] = W[k][l,m] + increment[k][l,m];
+
+						addW = multiplyByNumber(addW, -lr);
+						W[k] = addMatrix(W[k], addW);
+						*/
+							
+						increment = addW;
+					}
+				}
+				currentError = currentError / pv.Count;
+				drawCuadraticError(i*2, (int)(currentError*errorsHeight), errorsWidth, errorsHeight, bm, pb);
+				eL.Text = "Error: " + currentError;
+			}
+			
+			if(i < e){
+				lbl.Text = "#Epochs: " + i.ToString();
+			}else{
+				lbl.Text = "#Epochs: NO";
+			}
+		}
+		
 		public float[,] predict(PointValue pv){
 			float[,] pvVector;
 
