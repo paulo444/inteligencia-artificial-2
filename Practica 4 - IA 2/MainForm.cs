@@ -544,7 +544,7 @@ namespace Practica_1___IA_2
 
         void StartMLPClick(object sender, EventArgs e)
         {
-            //createErrorGraphic();
+            createErrorGraphic();
 
             //mlp.trainQuickPropagation(points, epochs, ETA, EXPECTED_ERROR, ERRORS_WIDTH, ERRORS_HEIGHT, bitmap3, pictureBox2, labelEpochs,
             //             bitmap2, pictureBox1, labelError);
@@ -560,8 +560,11 @@ namespace Practica_1___IA_2
             while(error > EXPECTED_ERROR && epoch < epochs)
             {
                 error = lm.RunEpoch(input, outputs);
+                drawCuadraticError(epoch * 2, (int)(error * ERRORS_HEIGHT));
                 epoch++;
             }
+            labelError.Text = "Error: " + error.ToString("0:0.######");
+            labelEpochs.Text = "#Epochs: " + epoch;
 
             evaluateAll();
             setResults();
